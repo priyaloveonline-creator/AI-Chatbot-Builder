@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Influencer Chatbot Builder — by Rohit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#030303;
+  --surface:#0c0c0c;
+  --surface2:#111;
+  --border:rgba(255,255,255,0.06);
+  --border-bright:rgba(255,255,255,0.12);
+  --white:#f0ede8;
+  --dim:#555;
+  --muted:#333;
+  --accent:#e8e0d0;
+  --green:#00ff88;
+  --green-dim:rgba(0,255,136,0.12);
+  --green-glow:rgba(0,255,136,0.06);
+  --mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Syne',sans-serif;overflow-x:hidden;cursor:none}
+
+/* CURSOR */
+#cur{width:6px;height:6px;background:#fff;border-radius:50%;position:fixed;z-index:9999;pointer-events:none;mix-blend-mode:difference;transition:transform .1s}
+#cur2{width:32px;height:32px;border:1px solid rgba(255,255,255,0.2);border-radius:50%;position:fixed;z-index:9998;pointer-events:none;transition:left .18s cubic-bezier(.25,.46,.45,.94),top .18s cubic-bezier(.25,.46,.45,.94),border-color .3s}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:28px 64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:all .4s}
+nav.scrolled{background:rgba(3,3,3,0.92);backdrop-filter:blur(20px);border-color:var(--border)}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .3s}
+.nav-links a:hover{color:var(--white)}
+.nav-right{display:flex;align-items:center;gap:20px}
+.nav-btn{font-size:11px;letter-spacing:.15em;text-transform:uppercase;padding:9px 22px;border:1px solid var(--border-bright);color:var(--white);text-decoration:none;cursor:none;transition:all .3s}
+.nav-btn:hover{background:var(--white);color:var(--bg)}
+
+/* HERO */
+#hero{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#nodeCanvas{position:absolute;inset:0;z-index:0}
+
+.hero-inner{position:relative;z-index:2;text-align:center;padding:0 40px}
+
+.hero-status{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:.1em;margin-bottom:48px;padding:8px 16px;border:1px solid rgba(0,255,136,0.2);background:rgba(0,255,136,0.04)}
+.status-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+
+.hero-h1{font-family:'Instrument Serif',serif;font-size:clamp(54px,8.5vw,128px);line-height:.9;font-weight:400;letter-spacing:-.03em;margin-bottom:32px}
+.hero-h1 .line2{font-style:italic;color:rgba(240,237,232,0.5)}
+.hero-h1 .line3{display:block;font-style:normal;color:var(--white)}
+
+.hero-sub{font-family:var(--mono);font-size:13px;color:var(--dim);letter-spacing:.04em;line-height:1.8;max-width:480px;margin:0 auto 56px}
+#typeText{color:var(--green)}
+#typeCursor{color:var(--green);animation:blink .8s step-end infinite}
+
+.hero-btns{display:flex;gap:12px;justify-content:center}
+.btn-a{padding:14px 36px;background:var(--white);color:var(--bg);font-family:'Syne',sans-serif;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;cursor:none;transition:all .3s;display:inline-flex;align-items:center;gap:8px}
+.btn-a:hover{background:var(--green);transform:translateY(-2px)}
+.btn-b{padding:14px 36px;border:1px solid var(--border-bright);color:rgba(240,237,232,0.6);font-family:'Syne',sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;cursor:none;transition:all .3s}
+.btn-b:hover{border-color:rgba(255,255,255,0.35);color:var(--white)}
+
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:16px;animation:fadeUp 1s 1.5s both}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,transparent,var(--dim));animation:scrollAnim 2s ease-in-out infinite}
+
+/* TICKER */
+.ticker{padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;background:rgba(255,255,255,0.01)}
+.ticker-inner{display:flex;gap:0;animation:tick 30s linear infinite;white-space:nowrap}
+.tick-item{padding:0 48px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);border-right:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;gap:12px}
+.tick-item span{color:var(--green)}
+
+/* SECTIONS */
+section{position:relative;z-index:1}
+.wrap{max-width:1240px;margin:0 auto;padding:0 64px}
+.sec-label{font-family:var(--mono);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--green);margin-bottom:20px}
+.sec-h{font-family:'Instrument Serif',serif;font-size:clamp(36px,4.5vw,64px);font-weight:400;line-height:1.05;letter-spacing:-.02em}
+.sec-h em{font-style:italic;color:rgba(240,237,232,0.45)}
+
+/* CODE BLOCK */
+.code-block{background:#080808;border:1px solid var(--border);font-family:var(--mono);font-size:12px;line-height:1.8;padding:32px 36px;position:relative;overflow:hidden}
+.code-block::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:.4}
+.code-top{display:flex;align-items:center;gap:8px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot-r{background:#ff5f56}.dot-y{background:#ffbd2e}.dot-g{background:#27c93f}
+.code-file{font-size:10px;color:var(--dim);letter-spacing:.1em;margin-left:auto}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:#c3e88d}.cm{color:#546e7a;font-style:italic}
+.nm{color:#f78c6c}.op{color:var(--dim)}.var{color:#89ddff}
+
+/* FEATURES */
+#features{padding:140px 0}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-top:80px}
+.feat-item{background:var(--bg);padding:48px;transition:background .3s;position:relative;overflow:hidden}
+.feat-item::after{content:'';position:absolute;inset:0;background:var(--green-glow);opacity:0;transition:opacity .4s}
+.feat-item:hover{background:#080808}
+.feat-item:hover::after{opacity:1}
+.feat-icon{width:40px;height:40px;margin-bottom:28px;position:relative;z-index:1}
+.feat-num{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:.15em;margin-bottom:16px;position:relative;z-index:1}
+.feat-title{font-size:18px;font-weight:600;margin-bottom:12px;position:relative;z-index:1}
+.feat-desc{font-size:13px;color:var(--dim);line-height:1.75;position:relative;z-index:1}
+
+/* TECH STACK */
+#tech{padding:120px 0;border-top:1px solid var(--border)}
+.tech-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:100px;margin-top:80px;align-items:start}
+.tech-cats{display:flex;flex-direction:column;gap:40px}
+.cat-title{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:16px}
+.cat-items{display:flex;flex-wrap:wrap;gap:8px}
+.tech-pill{display:flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--border);font-family:var(--mono);font-size:11px;color:rgba(240,237,232,0.6);transition:all .3s;cursor:none}
+.tech-pill:hover{border-color:rgba(255,255,255,0.25);color:var(--white);background:#0a0a0a}
+.tech-pill svg{flex-shrink:0}
+
+/* PROCESS */
+#process{padding:140px 0;border-top:1px solid var(--border)}
+.process-flow{margin-top:80px;position:relative}
+.flow-line{position:absolute;top:36px;left:36px;right:36px;height:1px;background:linear-gradient(90deg,var(--green),rgba(0,255,136,.1));z-index:0}
+.flow-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;position:relative;z-index:1}
+.flow-step{padding:40px 32px;background:var(--bg);border:1px solid var(--border);transition:all .3s;position:relative}
+.flow-step:hover{border-color:rgba(0,255,136,0.2);transform:translateY(-4px);background:#070707}
+.step-circle{width:56px;height:56px;border:1px solid rgba(0,255,136,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:var(--green);margin-bottom:28px;background:rgba(0,255,136,0.04)}
+.step-h{font-size:15px;font-weight:600;margin-bottom:10px;letter-spacing:-.01em}
+.step-p{font-size:12px;color:var(--dim);line-height:1.7;font-family:var(--mono)}
+
+/* PORTFOLIO */
+#portfolio{padding:140px 0;border-top:1px solid var(--border)}
+.port-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:80px}
+.port-item{background:var(--bg);position:relative;overflow:hidden;aspect-ratio:9/16;cursor:none}
+.port-item img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .7s cubic-bezier(.25,.46,.45,.94);filter:grayscale(20%) brightness(.8)}
+.port-item:hover img{transform:scale(1.05);filter:grayscale(0%) brightness(1)}
+.port-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(3,3,3,.95) 0%,rgba(3,3,3,.3) 40%,transparent 70%);opacity:0;transition:opacity .4s;display:flex;flex-direction:column;justify-content:flex-end;padding:28px}
+.port-item:hover .port-overlay{opacity:1}
+.port-tag{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+.port-name{font-size:18px;font-weight:600}
+
+.demos-section{margin-top:1px;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.demo-link{background:var(--bg);padding:36px;border:none;text-decoration:none;color:var(--white);cursor:none;transition:background .3s;position:relative;overflow:hidden}
+.demo-link::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.demo-link:hover{background:#090909}
+.demo-link:hover::before{transform:scaleX(1)}
+.demo-tag{font-family:var(--mono);font-size:9px;color:var(--green);letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px}
+.demo-name{font-size:17px;font-weight:600;margin-bottom:8px}
+.demo-desc{font-size:12px;color:var(--dim);line-height:1.6;font-family:var(--mono)}
+.demo-arrow{position:absolute;top:36px;right:36px;font-size:20px;color:var(--muted);transition:all .3s}
+.demo-link:hover .demo-arrow{color:var(--green);transform:translate(4px,-4px)}
+
+/* PRICING */
+#pricing{padding:140px 0;border-top:1px solid var(--border)}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-top:80px}
+.price-card{background:var(--bg);padding:60px;position:relative;overflow:hidden}
+.price-card.hot{background:#070707}
+.price-card.hot::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,255,136,0.04),transparent)}
+.price-tag{font-family:var(--mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;margin-bottom:32px;display:inline-flex;align-items:center;gap:8px}
+.price-tag.active{color:var(--green)}
+.price-tag.plain{color:var(--dim)}
+.tag-badge{background:var(--green);color:var(--bg);padding:2px 8px;font-size:9px;letter-spacing:.1em}
+.price-name{font-family:'Instrument Serif',serif;font-size:40px;font-weight:400;letter-spacing:-.02em;margin-bottom:12px}
+.price-line{font-family:var(--mono);font-size:12px;color:var(--dim);margin-bottom:44px;line-height:1.6}
+.price-num{font-family:'Syne',sans-serif;font-size:72px;font-weight:800;line-height:1;letter-spacing:-.04em;color:var(--white)}
+.price-period{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:6px;margin-bottom:8px}
+.price-maint{font-family:var(--mono);font-size:12px;color:var(--green);margin-bottom:44px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.price-feats{display:flex;flex-direction:column;gap:14px;margin-bottom:48px}
+.pf{display:flex;align-items:flex-start;gap:12px;font-family:var(--mono);font-size:12px;color:rgba(240,237,232,.65);line-height:1.5}
+.pf-dot{color:var(--green);flex-shrink:0;margin-top:2px}
+.price-btn{display:block;text-align:center;padding:15px;font-family:'Syne',sans-serif;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;cursor:none;transition:all .3s;border:1px solid var(--border-bright);color:var(--white)}
+.price-btn:hover,.price-card.hot .price-btn{background:var(--green);color:var(--bg);border-color:var(--green)}
+
+/* CTA */
+#contact{padding:160px 64px;text-align:center;border-top:1px solid var(--border);position:relative;overflow:hidden}
+#contact::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(0,255,136,0.05),transparent 70%);pointer-events:none}
+.cta-mono{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:32px}
+.cta-h{font-family:'Instrument Serif',serif;font-size:clamp(44px,7vw,96px);font-weight:400;line-height:.92;letter-spacing:-.03em;margin-bottom:32px}
+.cta-h em{font-style:italic;color:rgba(240,237,232,.4)}
+.cta-sub{font-family:var(--mono);font-size:13px;color:var(--dim);max-width:440px;margin:0 auto 64px;line-height:1.8}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-wa{padding:14px 36px;border:1px solid rgba(37,211,102,.3);color:#25d366;font-family:'Syne',sans-serif;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;cursor:none;display:inline-flex;align-items:center;gap:10px;transition:all .3s}
+.btn-wa:hover{background:rgba(37,211,102,.08);border-color:#25d366}
+
+/* FOOTER */
+footer{padding:36px 64px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.ft-l{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.15em}
+.ft-r{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em}
+
+/* UTILS */
+.fi{opacity:0;transform:translateY(36px);transition:opacity .9s ease,transform .9s ease}
+.fi.v{opacity:1;transform:translateY(0)}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scrollAnim{0%{opacity:0;transform:scaleY(0);transform-origin:top}50%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(0);transform-origin:bottom}}
+
+@media(max-width:900px){
+  nav{padding:20px 24px}.wrap{padding:0 24px}
+  .feat-grid,.pricing-grid{grid-template-columns:1fr}
+  .tech-layout{grid-template-columns:1fr}
+  .flow-steps{grid-template-columns:1fr 1fr}
+  .port-grid{grid-template-columns:1fr 1fr}
+  .demos-section{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:12px;text-align:center}
+  #contact{padding:100px 24px}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <ul class="nav-links">
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#process">Process</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="https://wa.me/917439130542" target="_blank" class="nav-btn" style="border-color:rgba(37,211,102,.25);color:#25d366">WhatsApp</a>
+    <a href="https://calendly.com/rdrohit/30min" target="_blank" class="nav-btn">Book a Call</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="nodeCanvas"></canvas>
+  <div class="hero-inner">
+    <div class="hero-status" style="animation:fadeUp .7s .2s both">
+      <span class="status-dot"></span>
+      <span id="typeText"></span><span id="typeCursor">▊</span>
+    </div>
+    <h1 class="hero-h1" style="animation:fadeUp .9s .4s both">
+      I Build AI<br>
+      <span class="line2">Chatbots That</span><br>
+      <span class="line3">Make You Money</span>
+    </h1>
+    <p class="hero-sub" style="animation:fadeUp .9s .6s both">
+      Custom AI influencer platforms engineered to monetize your audience —<br>
+      subscriptions, credits, voice, brand deals. All in one system.
+    </p>
+    <div class="hero-btns" style="animation:fadeUp .9s .8s both">
+      <a href="https://calendly.com/rdrohit/30min" target="_blank" class="btn-a">→ &nbsp;Book Strategy Call</a>
+      <a href="#portfolio" class="btn-b">View Live Builds</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="tickerInner"></div>
+</div>
+
+<!-- FEATURES -->
+<section id="features" style="padding:140px 0;border-top:1px solid var(--border)">
+<div class="wrap">
+  <div class="fi" style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-bottom:80px">
+    <div>
+      <div class="sec-label">What I Build</div>
+      <h2 class="sec-h">Every System<br>Your Audience <em>Needs</em></h2>
+    </div>
+    <!-- CODE SNIPPET -->
+    <div class="code-block fi">
+      <div class="code-top"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span><span class="code-file">chatbot.config.ts</span></div>
+      <span class="cm">// AI Influencer Platform Config</span><br>
+      <span class="kw">const</span> <span class="var">platform</span> <span class="op">=</span> {<br>
+      &nbsp;&nbsp;<span class="nm">model</span><span class="op">:</span> <span class="str">"gpt-4o"</span>,<br>
+      &nbsp;&nbsp;<span class="nm">voice</span><span class="op">:</span> <span class="str">"elevenlabs"</span>,<br>
+      &nbsp;&nbsp;<span class="nm">revenue</span><span class="op">:</span> {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="nm">subscriptions</span><span class="op">:</span> <span class="fn">true</span>,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="nm">credits</span><span class="op">:</span> <span class="fn">true</span>,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="nm">premiumContent</span><span class="op">:</span> <span class="fn">true</span>,<br>
+      &nbsp;&nbsp;},<br>
+      &nbsp;&nbsp;<span class="nm">payments</span><span class="op">:</span> [<span class="str">"stripe"</span>, <span class="str">"razorpay"</span>],<br>
+      &nbsp;&nbsp;<span class="nm">analytics</span><span class="op">:</span> <span class="fn">true</span>,<br>
+      &nbsp;&nbsp;<span class="nm">deploy</span><span class="op">:</span> <span class="str">"vercel"</span>,<br>
+      }<br><br>
+      <span class="cm">// → Setup Time: 72hrs avg</span><br>
+      <span class="cm">// → Revenue Day 1: possible</span>
+    </div>
+  </div>
+
+  <div class="feat-grid">
+    <div class="feat-item fi">
+      <svg class="feat-icon" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="rgba(0,255,136,0.3)"/><path d="M12 20h16M20 12l8 8-8 8" stroke="#00ff88" stroke-width="1.5"/></svg>
+      <div class="feat-num">01 — Core</div>
+      <div class="feat-title">Real-Time AI Chat</div>
+      <div class="feat-desc">AI trained on your content, personality, and tone. Fans feel like they're talking to the real you — at scale, 24/7, zero effort from you.</div>
+    </div>
+    <div class="feat-item fi">
+      <svg class="feat-icon" viewBox="0 0 40 40" fill="none"><rect x="8" y="14" width="24" height="16" rx="2" stroke="rgba(0,255,136,0.3)" stroke-width="1.5"/><path d="M14 14v-4a6 6 0 0 1 12 0v4" stroke="#00ff88" stroke-width="1.5"/></svg>
+      <div class="feat-num">02 — Revenue</div>
+      <div class="feat-title">Subscription + Credits</div>
+      <div class="feat-desc">Two monetization layers built-in: recurring subscription plans (daily/weekly/monthly/yearly) + pay-per-use credits. Stripe & Razorpay integrated.</div>
+    </div>
+    <div class="feat-item fi">
+      <svg class="feat-icon" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="8" stroke="rgba(0,255,136,0.3)" stroke-width="1.5"/><path d="M20 4v4M20 32v4M4 20h4M32 20h4" stroke="#00ff88" stroke-width="1.5"/></svg>
+      <div class="feat-num">03 — Engagement</div>
+      <div class="feat-title">Voice AI & Phone Calls</div>
+      <div class="feat-desc">Fans send voice notes, get voice replies. Even AI phone calls powered by ElevenLabs. The most immersive fan experience available anywhere.</div>
+    </div>
+    <div class="feat-item fi">
+      <svg class="feat-icon" viewBox="0 0 40 40" fill="none"><path d="M8 28l8-10 6 6 4-5 6 9" stroke="#00ff88" stroke-width="1.5"/><rect x="4" y="4" width="32" height="32" rx="2" stroke="rgba(0,255,136,0.3)" stroke-width="1.5"/></svg>
+      <div class="feat-num">04 — Intelligence</div>
+      <div class="feat-title">Owner Analytics Dashboard</div>
+      <div class="feat-desc">Full revenue dashboard: earnings by stream, user retention, credit spending patterns, subscription churn, and conversion funnels in real-time.</div>
+    </div>
+    <div class="feat-item fi">
+      <svg class="feat-icon" viewBox="0 0 40 40" fill="none"><path d="M20 8l10 6v12l-10 6-10-6V14z" stroke="rgba(0,255,136,0.3)" stroke-width="1.5"/><path d="M20 8v24M10 14l10 6 10-6" stroke="#00ff88" stroke-width="1.5"/></svg>
+      <div class="feat-num">05 — Premium</div>
+      <div class="feat-title">Content Unlock System</div>
+      <div class="feat-desc">Gate exclusive videos, brand collabs, personalized messages behind premium tiers. Turn your content into a layered monetization engine.</div>
+    </div>
+    <div class="feat-item fi">
+      <svg class="feat-icon" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="12" r="6" stroke="rgba(0,255,136,0.3)" stroke-width="1.5"/><path d="M8 36c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="#00ff88" stroke-width="1.5"/></svg>
+      <div class="feat-num">06 — Social</div>
+      <div class="feat-title">Social Media Integration</div>
+      <div class="feat-desc">Connect your Instagram, YouTube, TikTok. AI stays in sync with your latest content, drops, and announcements automatically.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- TECH STACK -->
+<section id="tech" style="padding:120px 0;border-top:1px solid var(--border)">
+<div class="wrap">
+  <div class="fi" style="display:grid;grid-template-columns:1fr 1.4fr;gap:100px;align-items:start">
+    <div>
+      <div class="sec-label">Tech Stack</div>
+      <h2 class="sec-h">Built on<br><em>Production-Grade</em><br>Infrastructure</h2>
+      <p style="font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:28px;line-height:1.8">Not no-code toys.<br>Real engineering. Real performance.<br>Real scalability.</p>
+    </div>
+    <div class="tech-cats">
+      <div>
+        <div class="cat-title">Frontend</div>
+        <div class="cat-items">
+          <div class="tech-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 19.5h20L12 2z" fill="rgba(0,255,136,0.5)"/></svg>React / Next.js</div>
+          <div class="tech-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(0,255,136,0.5)"><rect width="24" height="24" rx="3"/></svg>TypeScript</div>
+          <div class="tech-pill">Tailwind CSS</div>
+          <div class="tech-pill">Framer Motion</div>
+        </div>
+      </div>
+      <div>
+        <div class="cat-title">AI & Voice</div>
+        <div class="cat-items">
+          <div class="tech-pill">OpenAI GPT-4o</div>
+          <div class="tech-pill">Anthropic Claude</div>
+          <div class="tech-pill">ElevenLabs Voice</div>
+          <div class="tech-pill">Whisper STT</div>
+        </div>
+      </div>
+      <div>
+        <div class="cat-title">Backend & Payments</div>
+        <div class="cat-items">
+          <div class="tech-pill">Node.js / Express</div>
+          <div class="tech-pill">Supabase / Postgres</div>
+          <div class="tech-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(0,255,136,0.5)"><path d="M2 12L12 2l10 10-10 10L2 12z"/></svg>Stripe</div>
+          <div class="tech-pill">Razorpay</div>
+          <div class="tech-pill">Vercel / AWS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Architecture Snippet -->
+  <div class="code-block fi" style="margin-top:60px">
+    <div class="code-top"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span><span class="code-file">architecture.md → API Flow</span></div>
+    <span class="cm">// Request lifecycle: Fan sends message → Revenue</span><br><br>
+    <span class="kw">User</span> <span class="op">→</span> <span class="fn">AuthMiddleware</span><span class="op">(</span><span class="str">JWT</span><span class="op">)</span><br>
+    &nbsp;<span class="op">→</span> <span class="fn">CreditCheck</span><span class="op">(</span><span class="var">userCredits</span> <span class="op">>=</span> <span class="nm">1</span><span class="op">)</span><br>
+    &nbsp;<span class="op">→</span> <span class="fn">AIEngine</span><span class="op">(</span><span class="str">"gpt-4o"</span><span class="op">,</span> <span class="var">systemPrompt</span><span class="op">:</span> <span class="str">influencerPersonality</span><span class="op">)</span><br>
+    &nbsp;<span class="op">→</span> <span class="fn">VoiceLayer</span><span class="op">(</span><span class="str">"elevenlabs"</span><span class="op">)</span> <span class="cm">// if voice enabled</span><br>
+    &nbsp;<span class="op">→</span> <span class="fn">DebitCredit</span><span class="op">(</span><span class="nm">1</span><span class="op">)</span> <span class="op">+</span> <span class="fn">LogRevenue</span><span class="op">()</span><br>
+    &nbsp;<span class="op">→</span> <span class="fn">Stream</span><span class="op">(</span><span class="var">response</span><span class="op">)</span> <span class="cm">// real-time streaming</span><br><br>
+    <span class="cm">// Payment webhook: Stripe/Razorpay → Credits</span><br>
+    <span class="fn">onPayment</span><span class="op">(</span><span class="var">event</span><span class="op">)</span> <span class="op">→</span> <span class="fn">addCredits</span><span class="op">(</span><span class="var">user</span><span class="op">,</span> <span class="var">plan</span><span class="op">.</span><span class="nm">credits</span><span class="op">)</span>
+  </div>
+</div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" style="padding:140px 0;border-top:1px solid var(--border)">
+<div class="wrap">
+  <div class="fi">
+    <div class="sec-label">How It Works</div>
+    <h2 class="sec-h">Idea → Revenue<br><em>in 4 Steps</em></h2>
+  </div>
+  <div class="process-flow fi">
+    <div class="flow-line"></div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-circle">01</div>
+        <div class="step-h">Discovery Call</div>
+        <div class="step-p">Map your niche, audience psychology, and revenue goals. Define AI personality, tone, and full feature scope.</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-circle">02</div>
+        <div class="step-h">Design Sprint</div>
+        <div class="step-p">Custom UI built to your aesthetic. Dark luxury, vibrant neon, soft pastel — pixel-perfect brand match.</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-circle">03</div>
+        <div class="step-h">Build & Train</div>
+        <div class="step-p">AI trained on your content. Payments wired. Dashboard live. Voice enabled. Every feature tested.</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-circle">04</div>
+        <div class="step-h">Launch & Scale</div>
+        <div class="step-p">Custom domain. Going live. I monitor, optimize, and maintain so your revenue compounds month after month.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flow diagram SVG -->
+  <div class="fi" style="margin-top:60px;padding:40px;border:1px solid var(--border);background:#080808;overflow-x:auto">
+    <svg viewBox="0 0 900 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px">
+      <!-- boxes -->
+      <rect x="0" y="20" width="120" height="40" rx="2" stroke="rgba(0,255,136,0.3)" fill="rgba(0,255,136,0.04)"/>
+      <text x="60" y="44" text-anchor="middle" fill="rgba(240,237,232,0.7)" font-family="JetBrains Mono" font-size="11">Fan Message</text>
+      
+      <path d="M122 40h56" stroke="rgba(0,255,136,0.4)" stroke-dasharray="3 3"/>
+      <polygon points="176,36 184,40 176,44" fill="rgba(0,255,136,0.5)"/>
+
+      <rect x="186" y="20" width="120" height="40" rx="2" stroke="rgba(0,255,136,0.3)" fill="rgba(0,255,136,0.04)"/>
+      <text x="246" y="44" text-anchor="middle" fill="rgba(240,237,232,0.7)" font-family="JetBrains Mono" font-size="11">Auth + Credits</text>
+      
+      <path d="M308 40h56" stroke="rgba(0,255,136,0.4)" stroke-dasharray="3 3"/>
+      <polygon points="362,36 370,40 362,44" fill="rgba(0,255,136,0.5)"/>
+
+      <rect x="372" y="20" width="120" height="40" rx="2" stroke="rgba(0,255,136,0.3)" fill="rgba(0,255,136,0.04)"/>
+      <text x="432" y="44" text-anchor="middle" fill="rgba(240,237,232,0.7)" font-family="JetBrains Mono" font-size="11">AI Engine</text>
+
+      <path d="M494 40h56" stroke="rgba(0,255,136,0.4)" stroke-dasharray="3 3"/>
+      <polygon points="548,36 556,40 548,44" fill="rgba(0,255,136,0.5)"/>
+
+      <rect x="558" y="20" width="120" height="40" rx="2" stroke="rgba(0,255,136,0.3)" fill="rgba(0,255,136,0.04)"/>
+      <text x="618" y="44" text-anchor="middle" fill="rgba(240,237,232,0.7)" font-family="JetBrains Mono" font-size="11">Voice / Image</text>
+
+      <path d="M680 40h56" stroke="rgba(0,255,136,0.4)" stroke-dasharray="3 3"/>
+      <polygon points="734,36 742,40 734,44" fill="rgba(0,255,136,0.5)"/>
+
+      <rect x="744" y="20" width="156" height="40" rx="2" stroke="#00ff88" fill="rgba(0,255,136,0.08)"/>
+      <text x="822" y="38" text-anchor="middle" fill="#00ff88" font-family="JetBrains Mono" font-size="11" font-weight="500">Revenue Logged</text>
+      <text x="822" y="52" text-anchor="middle" fill="rgba(0,255,136,0.5)" font-family="JetBrains Mono" font-size="9">→ Dashboard</text>
+    </svg>
+  </div>
+</div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio" style="padding:140px 0;border-top:1px solid var(--border)">
+<div class="wrap">
+  <div class="fi" style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:80px">
+    <div>
+      <div class="sec-label">Portfolio</div>
+      <h2 class="sec-h">Built for the<br>World's <em>Biggest</em> Creators</h2>
+    </div>
+    <p style="font-family:var(--mono);font-size:12px;color:var(--dim);max-width:280px;line-height:1.8;text-align:right">Every UI is 100% custom.<br>No templates. No compromises.</p>
+  </div>
+
+  <div class="port-grid fi">
+    <div class="port-item">
+      <img src="/mnt/user-data/uploads/ChatGPT_Image_May_1__2026__04_15_15_PM.png" alt="CR7 AI">
+      <div class="port-overlay"><div class="port-tag">Sports Legend · Gold</div><div class="port-name">Cristiano Ronaldo AI</div></div>
+    </div>
+    <div class="port-item">
+      <img src="/mnt/user-data/uploads/PicRetouch_20260501_121211768.png" alt="Ryan Cole AI">
+      <div class="port-overlay"><div class="port-tag">Fitness · Neon Green</div><div class="port-name">Ryan Cole AI</div></div>
+    </div>
+    <div class="port-item">
+      <img src="/mnt/user-data/uploads/PicRetouch_20260501_193839085.png" alt="Virat Kohli AI">
+      <div class="port-overlay"><div class="port-tag">Cricket · Orange</div><div class="port-name">Virat Kohli AI</div></div>
+    </div>
+    <div class="port-item">
+      <img src="/mnt/user-data/uploads/file_00000000f9387208af3d2f5537d86dce.png" alt="BTS AI">
+      <div class="port-overlay"><div class="port-tag">K-Pop Community · Purple</div><div class="port-name">BTS Army AI</div></div>
+    </div>
+    <div class="port-item">
+      <img src="/mnt/user-data/uploads/PicRetouch_20260501_121453526.png" alt="Aarav AI">
+      <div class="port-overlay"><div class="port-tag">Luxury · Gold Black</div><div class="port-name">Aarav Mehta AI</div></div>
+    </div>
+    <div class="port-item">
+      <img src="/mnt/user-data/uploads/PicRetouch_20260501_121813044.png" alt="Sofia AI">
+      <div class="port-overlay"><div class="port-tag">Fashion · Pink</div><div class="port-name">Sofia Verma AI</div></div>
+    </div>
+  </div>
+
+  <div class="demos-section fi" style="margin-top:1px;background:var(--border)">
+    <a href="https://www.priyalove.online/" target="_blank" class="demo-link">
+      <div class="demo-tag">Live Production</div>
+      <div class="demo-name">PriyaLove.online</div>
+      <div class="demo-desc">Full-stack AI platform. Subscriptions, voice chat, custom fan experience. Deployed & revenue-generating.</div>
+      <span class="demo-arrow">↗</span>
+    </a>
+    <a href="https://luna-ai-coral.vercel.app/" target="_blank" class="demo-link">
+      <div class="demo-tag">Live Demo</div>
+      <div class="demo-name">Luna AI</div>
+      <div class="demo-desc">Glassmorphism companion platform with real-time chat, credit system, and multi-tier monetization flow.</div>
+      <span class="demo-arrow">↗</span>
+    </a>
+    <a href="https://kai-nakamura.vercel.app/" target="_blank" class="demo-link">
+      <div class="demo-tag">Live Demo</div>
+      <div class="demo-name">Kai Nakamura AI</div>
+      <div class="demo-desc">Dark tech influencer chatbot. Analytics dashboard, credit system, premium content unlock architecture.</div>
+      <span class="demo-arrow">↗</span>
+    </a>
+  </div>
+</div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="padding:140px 0;border-top:1px solid var(--border)">
+<div class="wrap">
+  <div class="fi" style="text-align:center;margin-bottom:80px">
+    <div class="sec-label" style="justify-content:center;display:flex">Investment</div>
+    <h2 class="sec-h" style="margin-top:20px">Two Systems.<br>One <em>Decision</em>.</h2>
+    <p style="font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:20px;line-height:1.8;max-width:380px;margin-left:auto;margin-right:auto">You're not buying a chatbot.<br>You're acquiring a revenue machine.</p>
+  </div>
+
+  <div class="pricing-grid fi">
+    <div class="price-card">
+      <div class="price-tag plain">Starter System</div>
+      <div class="price-name">Foundation</div>
+      <div class="price-line">For creators ready to launch their AI and activate recurring revenue from day one.</div>
+      <div class="price-num">$5,000</div>
+      <div class="price-period">one-time setup</div>
+      <div class="price-maint">+ $750 / month maintenance</div>
+      <div class="price-feats">
+        <div class="pf"><span class="pf-dot">→</span>Real-time AI Chat in your voice</div>
+        <div class="pf"><span class="pf-dot">→</span>Voice Messaging + AI Phone Calls</div>
+        <div class="pf"><span class="pf-dot">→</span>Image Response System</div>
+        <div class="pf"><span class="pf-dot">→</span>Credit System (pay-as-you-go)</div>
+        <div class="pf"><span class="pf-dot">→</span>Subscriptions via Stripe + Razorpay</div>
+        <div class="pf"><span class="pf-dot">→</span>User Dashboard</div>
+        <div class="pf"><span class="pf-dot">→</span>Custom Domain + Vercel Deployment</div>
+        <div class="pf"><span class="pf-dot">→</span>2 Active Revenue Streams</div>
+      </div>
+      <a href="https://calendly.com/rdrohit/30min" target="_blank" class="price-btn">Book a Call</a>
+    </div>
+    <div class="price-card hot">
+      <div class="price-tag active"><span class="tag-badge">Popular</span> Scale System</div>
+      <div class="price-name">Empire</div>
+      <div class="price-line">For serious creators who want the full revenue machine — marketing, analytics, brand deals, and everything in between.</div>
+      <div class="price-num">$10,000</div>
+      <div class="price-period">one-time setup</div>
+      <div class="price-maint">+ $1,500 / month maintenance</div>
+      <div class="price-feats">
+        <div class="pf"><span class="pf-dot">→</span>Everything in Foundation</div>
+        <div class="pf"><span class="pf-dot">→</span>Premium Content Unlock System</div>
+        <div class="pf"><span class="pf-dot">→</span>Social Media Integration</div>
+        <div class="pf"><span class="pf-dot">→</span>Owner Revenue Analytics Dashboard</div>
+        <div class="pf"><span class="pf-dot">→</span>Brand Collaboration Layer</div>
+        <div class="pf"><span class="pf-dot">→</span>Custom Feature Builds (any request)</div>
+        <div class="pf"><span class="pf-dot">→</span>3 Active Revenue Streams</div>
+        <div class="pf"><span class="pf-dot">→</span>Priority Support + Monthly Updates</div>
+      </div>
+      <a href="https://calendly.com/rdrohit/30min" target="_blank" class="price-btn">Start Your Empire</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- CTA -->
+<section id="contact">
+  <div class="cta-mono">Available for new projects</div>
+  <h2 class="cta-h">Your AI.<br><em>Your Rules.</em><br>Your Revenue.</h2>
+  <p class="cta-sub">Book a free 30-min call. You'll walk away with a complete blueprint for your AI revenue system — no obligations.</p>
+  <div class="cta-btns">
+    <a href="https://calendly.com/rdrohit/30min" target="_blank" class="btn-a" style="font-size:12px">📅 &nbsp;Schedule on Calendly</a>
+    <a href="https://wa.me/917439130542?text=Hi%20Rohit!%20I%20want%20to%20build%20my%20AI%20chatbot%20platform." target="_blank" class="btn-wa">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      WhatsApp Rohit
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-l">© 2026 — AI Influencer Chatbot Builder</div>
+  <div class="ft-r">Built for creators. Engineered for revenue.</div>
+</footer>
+
+<script>
+// ── CURSOR ──
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
+let mx=0,my=0,r2x=0,r2y=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx-3+'px';cur.style.top=my-3+'px';
+});
+(function loop(){r2x+=(mx-r2x)*.14;r2y+=(my-r2y)*.14;cur2.style.left=r2x-16+'px';cur2.style.top=r2y-16+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.feat-item,.port-item,.flow-step').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.transform='scale(3)';cur2.style.borderColor='rgba(0,255,136,.6)';});
+  el.addEventListener('mouseleave',()=>{cur.style.transform='scale(1)';cur2.style.borderColor='rgba(255,255,255,.2)';});
+});
+
+// ── CANVAS NODES ──
+const canvas=document.getElementById('nodeCanvas'),ctx=canvas.getContext('2d');
+let W,H,nodes=[];
+function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}
+window.addEventListener('resize',()=>{resize();initNodes();});resize();
+function initNodes(){
+  nodes=[];
+  const count=Math.floor(W*H/18000);
+  for(let i=0;i<count;i++){
+    nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5});
+  }
+}
+initNodes();
+function drawNodes(){
+  ctx.clearRect(0,0,W,H);
+  nodes.forEach(n=>{
+    n.x+=n.vx;n.y+=n.vy;
+    if(n.x<0||n.x>W)n.vx*=-1;
+    if(n.y<0||n.y>H)n.vy*=-1;
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,255,136,0.35)';ctx.fill();
+  });
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<140){
+        ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);
+        ctx.strokeStyle=`rgba(0,255,136,${.12*(1-d/140)})`;ctx.lineWidth=.5;ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawNodes);
+}
+drawNodes();
+
+// ── TYPING EFFECT ──
+const phrases=['Available for projects','Building AI Revenue Machines','Custom Chatbot Developer','Monetize Your Audience'];
+let pi=0,ci=0,deleting=false;
+const el=document.getElementById('typeText');
+function type(){
+  const phrase=phrases[pi];
+  if(!deleting&&ci<=phrase.length){el.textContent=phrase.slice(0,ci++);setTimeout(type,ci===phrase.length?2000:70);}
+  else if(deleting&&ci>=0){el.textContent=phrase.slice(0,ci--);setTimeout(type,ci<0?(pi=(pi+1)%phrases.length,deleting=false,200):40);}
+  else{deleting=true;setTimeout(type,400);}
+}
+type();
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>40);
+});
+
+// ── TICKER ──
+const ticks=['Real-Time AI Chat','Voice Messaging','Subscription Revenue','Credit System','Custom UI Design','Stripe Integration','ElevenLabs Voice','Analytics Dashboard','Fan Monetization','Brand Collaborations'];
+const inner=document.getElementById('tickerInner');
+const full=[...ticks,...ticks].map(t=>`<span class="tick-item"><span>✦</span>${t}</span>`).join('');
+inner.innerHTML=full+full;
+
+// ── SCROLL REVEAL ──
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('v'),i*60);obs.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
