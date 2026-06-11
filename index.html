@@ -7,857 +7,552 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --g:#00FF87;--g2:#00cc6a;--g3:rgba(0,255,135,0.08);
-  --black:#080808;--black2:#0e0e0e;--black3:#141414;--black4:#1a1a1a;
-  --white:#f8f8f4;--gray:#6b6b65;--gray2:#3a3a36;--gray3:#222220;
-  --serif:'Georgia',serif;
+  --g:#00FF87;
+  --black:#080808;--b2:#0f0f0f;--b3:#161616;--b4:#1e1e1e;
+  --white:#f5f5f0;--gray:#666662;--gray2:#2a2a28;
 }
 html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--white);font-family:'Helvetica Neue',Arial,sans-serif;overflow-x:hidden;cursor:none}
-
-/* CUSTOM CURSOR */
-#cursor{position:fixed;width:10px;height:10px;background:var(--g);border-radius:50%;pointer-events:none;z-index:9999;transition:transform .15s,opacity .2s;mix-blend-mode:difference}
-#cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(0,255,135,0.4);border-radius:50%;pointer-events:none;z-index:9998;transition:all .1s ease;transform:translate(-13px,-13px)}
-
-
+body{background:var(--black);color:var(--white);font-family:'Helvetica Neue',Arial,sans-serif;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:20px 52px;display:flex;align-items:center;justify-content:space-between;transition:all .4s}
-nav.scrolled{background:rgba(8,8,8,0.96);backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a;padding:14px 52px}
-.nav-logo{display:flex;align-items:center;gap:10px}
-.logo-box{width:36px;height:36px;border:1.5px solid var(--g);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:var(--g);letter-spacing:1px}
-.nav-brand{font-size:14px;font-weight:700;letter-spacing:3px}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,0.95);backdrop-filter:blur(12px);border-bottom:1px solid #1a1a1a}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-box{width:36px;height:36px;border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--g);letter-spacing:1px}
+.logo-name{font-size:14px;font-weight:800;letter-spacing:3px}
 .nav-links{display:flex;gap:32px;list-style:none}
-.nav-links a{font-size:10px;letter-spacing:2.5px;color:var(--gray);transition:color .2s;position:relative}
-.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--g);transition:width .3s}
+.nav-links a{font-size:10px;letter-spacing:2px;color:var(--gray);transition:color .2s}
 .nav-links a:hover{color:var(--white)}
-.nav-links a:hover::after{width:100%}
-.nav-ctas{display:flex;gap:10px}
-.btn-ghost{padding:9px 22px;border:1px solid #333;color:var(--white);font-size:10px;letter-spacing:2px;background:transparent;cursor:none;transition:all .3s}
+.nav-btns{display:flex;gap:10px}
+.btn-ghost{padding:9px 20px;border:1px solid #333;color:var(--white);font-size:10px;letter-spacing:2px;background:transparent;cursor:pointer;transition:all .25s;display:inline-block}
 .btn-ghost:hover{border-color:var(--g);color:var(--g)}
-.btn-green{padding:9px 22px;background:var(--g);color:#000;font-size:10px;letter-spacing:2px;font-weight:700;cursor:none;border:none;transition:all .3s;position:relative;overflow:hidden}
-.btn-green::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.2);transform:translateX(-100%);transition:transform .3s}
-.btn-green:hover::after{transform:translateX(0)}
+.btn-solid{padding:9px 20px;background:var(--g);color:#000;font-size:10px;letter-spacing:2px;font-weight:700;cursor:pointer;border:none;transition:all .25s;display:inline-block}
+.btn-solid:hover{background:#fff}
+
+/* TICKER */
+.ticker{padding:12px 0;background:var(--b2);border-bottom:1px solid #1a1a1a;overflow:hidden;margin-top:73px}
+.ticker-track{display:flex;white-space:nowrap;animation:tick 30s linear infinite}
+.ticker-item{display:inline-flex;align-items:center;gap:10px;padding:0 36px;font-size:11px;color:var(--gray);flex-shrink:0}
+.ticker-item strong{color:var(--white)}
+.ticker-dot{color:var(--g)}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* HERO */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 52px 80px;position:relative;overflow:hidden}
-.hero-noise{position:absolute;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
-.hero-glow{position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(0,255,135,0.06) 0%,transparent 70%);pointer-events:none}
-.avail-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border:1px solid rgba(0,255,135,0.3);background:rgba(0,255,135,0.05);font-size:10px;letter-spacing:2.5px;color:var(--g);margin-bottom:40px;animation:fadedown .8s ease both}
-.avail-dot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(0.8)}}
-@keyframes fadedown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadein{from{opacity:0}to{opacity:1}}
-.hero-eyebrow{font-size:10px;letter-spacing:3px;color:var(--gray);margin-bottom:24px;animation:fadeup .8s .1s ease both}
-.hero-h1{font-size:clamp(60px,8.5vw,128px);font-weight:800;line-height:.92;letter-spacing:-4px;text-align:center;margin-bottom:36px;animation:fadeup .8s .2s ease both}
-.hero-h1 .serif{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--g);letter-spacing:-2px}
-.hero-h1 .dim{color:#3a3a3a}
-.hero-sub{font-size:17px;color:var(--gray);line-height:1.8;max-width:560px;text-align:center;margin:0 auto 52px;animation:fadeup .8s .35s ease both}
+.hero{min-height:calc(100vh - 73px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 48px 60px;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(0,255,135,0.05),transparent 65%);pointer-events:none}
+.avail{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border:1px solid rgba(0,255,135,0.25);background:rgba(0,255,135,0.04);font-size:10px;letter-spacing:2.5px;color:var(--g);margin-bottom:36px}
+.avail-dot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:clamp(52px,8vw,120px);font-weight:800;line-height:.92;letter-spacing:-4px;margin-bottom:28px}
+.hero h1 em{font-style:italic;font-family:Georgia,serif;font-weight:400;color:var(--g)}
+.hero h1 .dim{color:#2e2e2e}
+.hero-sub{font-size:17px;color:var(--gray);line-height:1.8;max-width:540px;margin:0 auto 44px}
 .hero-sub strong{color:var(--white)}
-.hero-ctas{display:flex;gap:14px;justify-content:center;animation:fadeup .8s .45s ease both;flex-wrap:wrap}
-.cta-main{padding:18px 40px;background:var(--g);color:#000;font-size:12px;letter-spacing:2.5px;font-weight:700;cursor:none;border:none;transition:all .3s;position:relative;overflow:hidden}
-.cta-main:hover{transform:translateY(-2px);box-shadow:0 20px 60px rgba(0,255,135,0.25)}
-.cta-sec{padding:18px 40px;border:1px solid #2a2a2a;color:var(--white);font-size:12px;letter-spacing:2.5px;background:transparent;cursor:none;transition:all .3s}
+.hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:64px}
+.cta-main{padding:17px 40px;background:var(--g);color:#000;font-size:12px;letter-spacing:2.5px;font-weight:700;border:none;cursor:pointer;transition:all .25s;display:inline-block}
+.cta-main:hover{background:#fff;transform:translateY(-2px)}
+.cta-sec{padding:17px 40px;border:1px solid #2a2a2a;color:var(--white);font-size:12px;letter-spacing:2.5px;background:transparent;cursor:pointer;transition:all .25s;display:inline-block}
 .cta-sec:hover{border-color:#555;transform:translateY(-2px)}
-.hero-social-proof{margin-top:60px;display:flex;align-items:center;gap:32px;opacity:.5;font-size:11px;letter-spacing:1.5px;color:var(--gray);animation:fadeup .8s .6s ease both}
-.proof-divider{width:1px;height:30px;background:#333}
-.proof-num{font-size:22px;font-weight:700;color:var(--white);display:block;opacity:1}
-.scroll-indicator{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;animation:fadeup 1s .8s ease both}
-.scroll-text{font-size:9px;letter-spacing:3px;color:var(--gray)}
-.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--gray),transparent)}
+.hero-stats{display:flex;align-items:center;gap:40px;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:28px;font-weight:800;color:var(--g);display:block}
+.stat-label{font-size:10px;letter-spacing:2px;color:var(--gray)}
+.stat-div{width:1px;height:36px;background:#222}
 
-/* SECTION BASE */
-section{padding:120px 52px}
-.s-label{font-size:9px;letter-spacing:3.5px;color:var(--g);margin-bottom:20px;font-family:monospace}
-.s-title{font-size:clamp(36px,5vw,66px);font-weight:800;line-height:1;letter-spacing:-2px}
-.s-title em{font-style:italic;font-family:var(--serif);font-weight:400;color:var(--gray)}
+/* SECTION */
+.section{padding:100px 48px;max-width:1200px;margin:0 auto}
+.s-label{font-size:9px;letter-spacing:3.5px;color:var(--g);margin-bottom:14px;font-family:monospace}
+.s-title{font-size:clamp(34px,5vw,62px);font-weight:800;line-height:1;letter-spacing:-2px;margin-bottom:16px}
+.s-title em{font-style:italic;font-family:Georgia,serif;font-weight:400;color:var(--gray)}
+.s-sub{font-size:15px;color:var(--gray);line-height:1.8;max-width:580px;margin-bottom:52px}
+.sep{height:1px;background:#161616}
 
-/* REVENUE VISUAL SECTION */
-.revenue-section{background:var(--black);position:relative;overflow:hidden}
-.revenue-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1240px;margin:70px auto 0}
-.revenue-streams{display:flex;flex-direction:column;gap:3px}
-.stream-row{display:flex;align-items:center;gap:16px;padding:18px 24px;background:var(--black2);transition:all .4s;position:relative;overflow:hidden;cursor:none}
-.stream-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--g);transform:scaleY(0);transition:transform .3s;transform-origin:bottom}
-.stream-row:hover::before{transform:scaleY(1)}
-.stream-row:hover{background:var(--black3);transform:translateX(4px)}
-.stream-icon{font-size:22px;width:40px;text-align:center}
-.stream-info{flex:1}
-.stream-name{font-size:13px;font-weight:600;margin-bottom:3px}
-.stream-desc{font-size:11px;color:var(--gray);font-family:monospace}
-.stream-rev{text-align:right}
-.stream-amount{font-size:16px;font-weight:700;color:var(--g)}
-.stream-period{font-size:9px;color:var(--gray);letter-spacing:1.5px;font-family:monospace}
-.total-bar{margin-top:3px;padding:20px 24px;background:rgba(0,255,135,0.08);border:1px solid rgba(0,255,135,0.2);display:flex;justify-content:space-between;align-items:center}
-.total-label{font-size:11px;letter-spacing:2px;color:var(--g);font-family:monospace}
-.total-amount{font-size:28px;font-weight:800;color:var(--g)}
-.revenue-right{display:flex;flex-direction:column;gap:24px}
-.rev-headline{font-size:clamp(32px,4vw,52px);font-weight:800;line-height:1.05;letter-spacing:-2px}
-.rev-headline em{font-style:italic;font-family:var(--serif);font-weight:400;color:var(--g)}
-.rev-body{font-size:15px;color:var(--gray);line-height:1.9}
-.rev-note{font-size:12px;color:var(--gray);padding:16px 20px;border-left:2px solid var(--g);background:var(--black2);font-family:monospace;line-height:1.7}
+/* REVENUE STREAMS */
+.streams{display:flex;flex-direction:column;gap:3px}
+.stream{display:flex;align-items:center;gap:16px;padding:18px 24px;background:var(--b2);transition:all .3s;border-left:3px solid transparent}
+.stream:hover{background:var(--b3);border-left-color:var(--g)}
+.s-icon{font-size:20px;width:36px;text-align:center}
+.s-info{flex:1}
+.s-name{font-size:13px;font-weight:600;margin-bottom:2px}
+.s-desc{font-size:11px;color:var(--gray);font-family:monospace}
+.s-amt{font-size:16px;font-weight:700;color:var(--g);font-family:monospace}
+.s-per{font-size:9px;color:var(--gray);letter-spacing:1.5px;font-family:monospace;display:block;text-align:right}
+.total-row{padding:20px 24px;background:rgba(0,255,135,0.07);border:1px solid rgba(0,255,135,0.18);display:flex;justify-content:space-between;align-items:center;margin-top:3px}
+.total-row span{font-size:11px;letter-spacing:2px;color:var(--g);font-family:monospace}
+.total-row strong{font-size:26px;font-weight:800;color:var(--g)}
 
-/* CHATBOT MOCKUP SECTION */
-.demo-section{background:var(--black2);position:relative;overflow:hidden}
-.demo-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--g),transparent)}
-.demo-tabs{display:flex;gap:3px;margin:60px auto 0;max-width:1240px}
-.demo-tab{padding:12px 28px;font-size:10px;letter-spacing:2.5px;background:var(--black3);border:none;color:var(--gray);cursor:none;transition:all .3s}
-.demo-tab.active{background:var(--g);color:#000;font-weight:700}
-.demo-screens{max-width:1240px;margin:3px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:3px}
-.demo-panel{padding:48px;background:var(--black3);display:none}
-.demo-panel.active{display:block}
-.demo-desc{font-size:13px;color:var(--gray);line-height:1.8;margin-bottom:32px}
+/* GRID HELPERS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
 
-/* CHATBOT UI MOCKUP */
-.phone-frame{width:280px;margin:0 auto;background:#111;border-radius:32px;border:6px solid #1e1e1e;box-shadow:0 40px 80px rgba(0,0,0,0.8),inset 0 0 0 1px #2a2a2a;overflow:hidden}
-.phone-status{background:#0a0a0a;padding:12px 20px 8px;display:flex;justify-content:space-between;align-items:center}
-.phone-time{font-size:12px;font-weight:600}
-.phone-icons{font-size:11px;display:flex;gap:6px}
-.chat-header{background:#0f0f0f;padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #1a1a1a}
-.chat-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--g),#00a856);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000}
-.chat-name{font-size:13px;font-weight:600}
-.chat-status{font-size:10px;color:var(--g);display:flex;align-items:center;gap:4px}
-.chat-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--g);display:inline-block}
-.chat-body{background:#080808;min-height:320px;padding:16px;display:flex;flex-direction:column;gap:10px;max-height:360px;overflow:hidden}
-.msg{max-width:80%;padding:10px 14px;border-radius:16px;font-size:12px;line-height:1.5}
-.msg.them{background:#1a1a1a;color:var(--white);align-self:flex-start;border-bottom-left-radius:4px}
-.msg.me{background:var(--g);color:#000;align-self:flex-end;border-bottom-right-radius:4px;font-weight:500}
-.msg-time{font-size:9px;color:var(--gray);padding:0 4px}
-.msg-time.right{align-self:flex-end}
-.typing{background:#1a1a1a;padding:10px 16px;border-radius:16px;display:inline-flex;gap:4px;align-self:flex-start}
-.typing span{width:6px;height:6px;border-radius:50%;background:var(--gray);animation:blink 1.2s infinite}
-.typing span:nth-child(2){animation-delay:.2s}
-.typing span:nth-child(3){animation-delay:.4s}
-@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
-.chat-input-bar{background:#0f0f0f;padding:10px 16px;display:flex;align-items:center;gap:8px;border-top:1px solid #1a1a1a}
-.chat-input{flex:1;background:#1a1a1a;border:none;border-radius:20px;padding:8px 14px;font-size:11px;color:var(--white);outline:none}
-.chat-send{width:30px;height:30px;border-radius:50%;background:var(--g);border:none;display:flex;align-items:center;justify-content:center;cursor:none;font-size:13px}
-
-/* DEMO FEATURE LIST */
-.demo-features{display:flex;flex-direction:column;gap:12px;justify-content:center}
-.demo-feat{display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--black2);transition:all .3s}
-.demo-feat:hover{background:var(--black4)}
-.df-icon{font-size:20px;margin-top:2px}
-.df-title{font-size:13px;font-weight:600;margin-bottom:4px}
-.df-desc{font-size:11px;color:var(--gray);line-height:1.6;font-family:monospace}
-.demo-earn{background:rgba(0,255,135,0.06);border:1px solid rgba(0,255,135,0.15);padding:16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-.earn-label{font-size:10px;letter-spacing:2px;color:var(--g);font-family:monospace}
-.earn-num{font-size:32px;font-weight:800;color:var(--g)}
+/* CARD */
+.card{padding:36px 28px;background:var(--b2);transition:background .3s}
+.card:hover{background:var(--b3)}
+.card-icon{font-size:28px;margin-bottom:18px}
+.card-title{font-size:15px;font-weight:700;margin-bottom:10px}
+.card-body{font-size:12px;color:var(--gray);line-height:1.75;font-family:monospace}
+.card-tag{display:inline-block;margin-top:14px;font-size:9px;letter-spacing:2px;padding:4px 10px;background:rgba(0,255,135,0.08);color:var(--g)}
 
 /* BEFORE/AFTER */
-.ba-section{background:var(--black);position:relative}
-.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;max-width:1240px;margin:70px auto 0}
-.ba-card{padding:48px}
-.ba-card.before{background:var(--black2)}
-.ba-card.after{background:rgba(0,255,135,0.05);border:1px solid rgba(0,255,135,0.15)}
-.ba-label{font-size:9px;letter-spacing:3px;margin-bottom:24px;display:inline-block;padding:6px 14px}
-.ba-card.before .ba-label{background:#1a1a1a;color:var(--gray)}
-.ba-card.after .ba-label{background:rgba(0,255,135,0.15);color:var(--g)}
-.ba-items{list-style:none;display:flex;flex-direction:column;gap:14px}
-.ba-items li{display:flex;gap:12px;font-size:14px;line-height:1.5}
-.ba-card.before .ba-items li{color:var(--gray)}
-.ba-card.after .ba-items li{color:var(--white)}
-.ba-items li::before{font-size:13px;margin-top:2px;flex-shrink:0}
-.ba-card.before .ba-items li::before{content:'✗';color:#444}
-.ba-card.after .ba-items li::before{content:'✓';color:var(--g)}
-
-/* SOCIAL PROOF TICKER */
-.ticker-section{padding:30px 0;background:var(--black2);border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a;overflow:hidden;position:relative}
-.ticker-track{display:flex;gap:0;white-space:nowrap;animation:ticker 28s linear infinite}
-.ticker-item{display:inline-flex;align-items:center;gap:12px;padding:0 40px;font-size:12px;color:var(--gray);flex-shrink:0}
-.ticker-item strong{color:var(--white)}
-.ticker-item .dot{color:var(--g)}
-@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-/* FEATURES GRID */
-.feat-section{background:var(--black)}
-.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;max-width:1240px;margin:70px auto 0}
-.feat-card{padding:40px 32px;background:var(--black2);transition:all .4s;position:relative;overflow:hidden}
-.feat-card::after{content:'';position:absolute;inset:0;background:var(--g3);opacity:0;transition:opacity .4s}
-.feat-card:hover::after{opacity:1}
-.feat-card:hover{transform:translateY(-4px)}
-.feat-ico{font-size:30px;margin-bottom:20px}
-.feat-title{font-size:15px;font-weight:700;margin-bottom:10px}
-.feat-desc{font-size:12px;color:var(--gray);line-height:1.75;font-family:monospace}
-.feat-tag{display:inline-block;margin-top:16px;font-size:9px;letter-spacing:2px;padding:4px 10px;background:rgba(0,255,135,0.1);color:var(--g)}
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.ba{padding:44px}
+.ba.before{background:var(--b2)}
+.ba.after{background:rgba(0,255,135,0.04);border:1px solid rgba(0,255,135,0.12)}
+.ba-badge{display:inline-block;font-size:9px;letter-spacing:2.5px;padding:6px 14px;margin-bottom:24px}
+.ba.before .ba-badge{background:#1a1a1a;color:var(--gray)}
+.ba.after .ba-badge{background:rgba(0,255,135,0.12);color:var(--g)}
+.ba-list{list-style:none;display:flex;flex-direction:column;gap:13px}
+.ba-list li{display:flex;gap:12px;font-size:14px;line-height:1.5}
+.ba.before .ba-list li{color:var(--gray)}
+.ba.before .ba-list li::before{content:'✗';color:#333;flex-shrink:0}
+.ba.after .ba-list li::before{content:'✓';color:var(--g);flex-shrink:0}
 
 /* CASE STUDIES */
-.cases{display:grid;grid-template-columns:repeat(2,1fr);gap:3px;max-width:1240px;margin:70px auto 0}
-.case-card{padding:48px;background:var(--black2);position:relative;transition:all .4s;cursor:none}
-.case-card:hover{background:var(--black3)}
-.case-niche{font-size:9px;letter-spacing:3px;color:var(--g);margin-bottom:16px;font-family:monospace}
-.case-title{font-size:22px;font-weight:700;margin-bottom:12px}
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.case{padding:44px;background:var(--b2);transition:background .3s;position:relative}
+.case:hover{background:var(--b3)}
+.case-niche{font-size:9px;letter-spacing:2.5px;color:var(--g);font-family:monospace;margin-bottom:14px}
+.case-title{font-size:20px;font-weight:700;margin-bottom:10px}
 .case-desc{font-size:13px;color:var(--gray);line-height:1.8;margin-bottom:28px;font-family:monospace}
-.case-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.cstat{text-align:center}
-.cstat-num{font-size:26px;font-weight:800;color:var(--g)}
-.cstat-label{font-size:9px;letter-spacing:1.5px;color:var(--gray);font-family:monospace;margin-top:4px}
-.case-arrow{position:absolute;top:48px;right:48px;font-size:20px;color:#2a2a2a;transition:color .3s}
-.case-card:hover .case-arrow{color:var(--g)}
+.case-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.cn-val{font-size:24px;font-weight:800;color:var(--g)}
+.cn-label{font-size:9px;letter-spacing:1.5px;color:var(--gray);font-family:monospace;margin-top:3px}
 
 /* PRICING */
-.pricing-section{background:var(--black2)}
-.price-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;max-width:1240px;margin:70px auto 0}
-.p-card{padding:44px 36px;background:var(--black);position:relative;transition:transform .3s}
-.p-card:hover{transform:translateY(-6px)}
-.p-card.hot{background:#060f09;border:1px solid rgba(0,255,135,0.25)}
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.p-card{padding:40px 32px;background:var(--b2);position:relative;transition:transform .3s}
+.p-card:hover{transform:translateY(-4px)}
+.p-card.hot{background:#07110a;border:1px solid rgba(0,255,135,0.2)}
 .p-card.hot::before{content:'MOST POPULAR';position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--g);color:#000;font-size:8px;letter-spacing:2px;padding:5px 16px;font-weight:700}
-.p-tier{font-size:9px;letter-spacing:3px;color:var(--gray);margin-bottom:10px;font-family:monospace}
-.p-name{font-size:20px;font-weight:700;margin-bottom:20px}
-.p-price{font-size:52px;font-weight:800;line-height:1;margin-bottom:6px;letter-spacing:-2px}
+.p-tier{font-size:9px;letter-spacing:2.5px;color:var(--gray);font-family:monospace;margin-bottom:8px}
+.p-name{font-size:18px;font-weight:700;margin-bottom:16px}
+.p-price{font-size:48px;font-weight:800;line-height:1;letter-spacing:-2px}
 .p-price sub{font-size:18px;font-weight:400;letter-spacing:0;vertical-align:middle}
-.p-cycle{font-size:11px;color:var(--gray);margin-bottom:8px;font-family:monospace}
-.p-roi{font-size:12px;color:var(--g);margin-bottom:28px;font-family:monospace}
-.p-feats{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:36px}
-.p-feats li{font-size:12px;display:flex;gap:10px;color:var(--gray)}
+.p-cycle{font-size:11px;color:var(--gray);font-family:monospace;margin:6px 0 4px}
+.p-roi{font-size:12px;color:var(--g);font-family:monospace;margin-bottom:24px}
+.p-feats{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+.p-feats li{font-size:12px;color:var(--gray);display:flex;gap:8px}
 .p-feats li::before{content:'→';color:var(--g);flex-shrink:0}
-.p-feats li.hot-feat{color:var(--white)}
-.p-btn{width:100%;padding:15px;font-size:10px;letter-spacing:2.5px;font-weight:700;cursor:none;transition:all .3s;border:none}
+.p-feats li.hi{color:var(--white)}
+.p-btn{width:100%;padding:14px;font-size:10px;letter-spacing:2.5px;font-weight:700;cursor:pointer;transition:all .25s;border:none}
 .p-btn.outline{background:transparent;border:1px solid #2a2a2a;color:var(--white)}
 .p-btn.outline:hover{border-color:var(--white)}
 .p-btn.fill{background:var(--g);color:#000}
 .p-btn.fill:hover{background:#fff}
 
-/* PROCESS SECTION */
-.proc-section{background:var(--black)}
-.proc-steps{max-width:960px;margin:70px auto 0;display:flex;flex-direction:column;gap:3px;counter-reset:step}
-.proc-step{display:grid;grid-template-columns:100px 1fr 140px;gap:40px;align-items:start;padding:36px 44px;background:var(--black2);transition:all .4s;counter-increment:step}
-.proc-step:hover{background:var(--black3);border-left:3px solid var(--g)}
-.step-ct{font-family:monospace;font-size:10px;color:var(--g);letter-spacing:2px;padding-top:4px}
-.step-title{font-size:17px;font-weight:700;margin-bottom:8px}
-.step-desc{font-size:12px;color:var(--gray);line-height:1.75;font-family:monospace}
-.step-dur{font-size:9px;letter-spacing:2.5px;color:var(--gray);font-family:monospace;padding-top:5px;text-align:right}
+/* PROCESS */
+.steps{display:flex;flex-direction:column;gap:3px}
+.step{display:grid;grid-template-columns:80px 1fr 120px;gap:32px;padding:28px 36px;background:var(--b2);transition:all .3s;align-items:start}
+.step:hover{background:var(--b3);border-left:3px solid var(--g)}
+.step-n{font-size:10px;color:var(--g);font-family:monospace;letter-spacing:2px;padding-top:3px}
+.step-title{font-size:16px;font-weight:700;margin-bottom:6px}
+.step-body{font-size:12px;color:var(--gray);line-height:1.75;font-family:monospace}
+.step-time{font-size:9px;letter-spacing:2px;color:var(--gray);font-family:monospace;padding-top:4px;text-align:right}
 
 /* FAQ */
-.faq-section{background:var(--black2)}
-.faq-list{max-width:840px;margin:70px auto 0;display:flex;flex-direction:column;gap:3px}
-.faq-item{background:var(--black3);overflow:hidden}
-.faq-q{padding:24px 28px;font-size:14px;font-weight:600;cursor:none;display:flex;justify-content:space-between;align-items:center;transition:color .3s}
+.faq{display:flex;flex-direction:column;gap:3px;max-width:800px}
+.faq-item{background:var(--b2)}
+.faq-q{padding:22px 26px;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:color .2s;user-select:none}
 .faq-q:hover{color:var(--g)}
-.faq-q .icon{font-size:18px;color:var(--g);transition:transform .3s;flex-shrink:0}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s}
-.faq-a p{padding:0 28px 20px;font-size:13px;color:var(--gray);line-height:1.8;font-family:monospace}
-.faq-item.open .faq-a{max-height:200px}
-.faq-item.open .icon{transform:rotate(45deg)}
+.faq-icon{font-size:20px;color:var(--g);transition:transform .3s;flex-shrink:0;line-height:1}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.faq-a p{padding:0 26px 20px;font-size:13px;color:var(--gray);line-height:1.8;font-family:monospace}
+.faq-item.open .faq-a{max-height:180px}
+.faq-item.open .faq-icon{transform:rotate(45deg)}
 
 /* FINAL CTA */
-.final-cta{background:var(--black);text-align:center;padding:140px 52px;position:relative;overflow:hidden}
-.final-cta::before{content:'';position:absolute;bottom:-200px;left:50%;transform:translateX(-50%);width:600px;height:500px;background:radial-gradient(ellipse,rgba(0,255,135,0.08),transparent 70%)}
-.final-h{font-size:clamp(48px,7vw,96px);font-weight:800;line-height:.95;letter-spacing:-3px;margin-bottom:28px}
-.final-h em{font-style:italic;font-family:var(--serif);font-weight:400;color:var(--g)}
-.final-sub{font-size:16px;color:var(--gray);max-width:480px;margin:0 auto 52px;line-height:1.8}
-.final-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.final-trust{margin-top:40px;font-size:11px;color:var(--gray);display:flex;align-items:center;gap:20px;justify-content:center;flex-wrap:wrap}
-.trust-item{display:flex;align-items:center;gap:6px}
-.trust-dot{color:var(--g)}
+.final{text-align:center;padding:120px 48px;position:relative}
+.final::before{content:'';position:absolute;bottom:-100px;left:50%;transform:translateX(-50%);width:500px;height:400px;background:radial-gradient(ellipse,rgba(0,255,135,0.06),transparent 70%);pointer-events:none}
+.final h2{font-size:clamp(44px,7vw,90px);font-weight:800;line-height:.95;letter-spacing:-3px;margin-bottom:20px}
+.final h2 em{font-style:italic;font-family:Georgia,serif;font-weight:400;color:var(--g)}
+.final-sub{font-size:16px;color:var(--gray);max-width:460px;margin:0 auto 44px;line-height:1.8}
+.final-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+.trust{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;font-size:11px;color:var(--gray)}
+.trust span{display:flex;align-items:center;gap:6px}
+.trust span::before{content:'●';color:var(--g);font-size:7px}
 
 /* FOOTER */
-footer{background:var(--black2);border-top:1px solid #1a1a1a;padding:52px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:32px}
-.foot-brand{font-size:20px;font-weight:800;letter-spacing:2px}
-.foot-brand span{color:var(--g)}
-.foot-copy{font-size:11px;color:var(--gray);text-align:center;font-family:monospace}
-.foot-links{display:flex;gap:24px;justify-content:flex-end}
-.foot-links a{font-size:11px;color:var(--gray);letter-spacing:1px;transition:color .3s}
+footer{border-top:1px solid #161616;padding:36px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.foot-logo{font-size:14px;font-weight:800;letter-spacing:3px}
+.foot-logo span{color:var(--g)}
+.foot-copy{font-size:11px;color:var(--gray);font-family:monospace}
+.foot-links{display:flex;gap:20px}
+.foot-links a{font-size:11px;color:var(--gray);transition:color .2s;letter-spacing:1px}
 .foot-links a:hover{color:var(--g)}
 
-/* SCROLL REVEAL */
-.reveal{opacity:0;transform:translateY(32px);transition:opacity .8s ease,transform .8s ease}
-.reveal.visible{opacity:1;transform:translateY(0)}
-.reveal-delay-1{transition-delay:.1s}
-.reveal-delay-2{transition-delay:.2s}
-.reveal-delay-3{transition-delay:.3s}
+/* SECTION BG ALTS */
+.bg2{background:var(--b2)}
 
-/* COUNTER ANIMATION */
-.count-num{display:inline-block}
-
-@media(max-width:960px){
-  nav{padding:16px 24px}
+@media(max-width:880px){
+  nav{padding:14px 20px}
   .nav-links{display:none}
-  section{padding:80px 24px}
-  .revenue-grid,.demo-screens,.ba-grid,.feats,.cases,.price-cards,.proc-step,.footer{grid-template-columns:1fr}
-  .hero{padding:100px 24px 70px}
-  footer{grid-template-columns:1fr;text-align:center;padding:32px 24px}
+  .section{padding:70px 20px}
+  .g2,.g3,.ba-grid,.cases,.pricing,.step{grid-template-columns:1fr}
+  .step{gap:12px}
+  .step-time{text-align:left}
+  .hero{padding:60px 20px 40px}
+  .final,.footer{padding:80px 20px}
+  footer{flex-direction:column;text-align:center;padding:28px 20px}
   .foot-links{justify-content:center}
-  .proc-step{grid-template-columns:1fr;gap:12px}
-  .step-dur{text-align:left}
 }
 </style>
 </head>
 <body>
 
-<!-- CURSOR -->
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
-
-
-
 <!-- NAV -->
-<nav id="nav">
-  <div class="nav-logo">
+<nav>
+  <div class="logo">
     <div class="logo-box">CO</div>
-    <span class="nav-brand">CREATOROS</span>
+    <span class="logo-name">CREATOROS</span>
   </div>
   <ul class="nav-links">
     <li><a href="#revenue">REVENUE</a></li>
-    <li><a href="#demo">DEMO</a></li>
+    <li><a href="#demo">HOW IT WORKS</a></li>
     <li><a href="#results">RESULTS</a></li>
     <li><a href="#pricing">PRICING</a></li>
     <li><a href="#process">PROCESS</a></li>
   </ul>
-  <div class="nav-ctas">
-    <a href="https://wa.me/917439130542"><button class="btn-ghost">WHATSAPP</button></a>
-    <a href="https://calendly.com/rdrohit/30min"><button class="btn-green">BOOK A CALL ↗</button></a>
+  <div class="nav-btns">
+    <a href="https://wa.me/917439130542" target="_blank"><button class="btn-ghost">WHATSAPP</button></a>
+    <a href="https://calendly.com/rdrohit/30min" target="_blank"><button class="btn-solid">BOOK A CALL ↗</button></a>
   </div>
 </nav>
 
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track" id="ticker">
+    <span class="ticker-item"><strong>FitWithMaya</strong> <span class="ticker-dot">●</span> Fitness Creator <span class="ticker-dot">●</span> $38K MRR in 90 days</span>
+    <span class="ticker-item"><strong>MoneyMind AI</strong> <span class="ticker-dot">●</span> Finance Educator <span class="ticker-dot">●</span> $21K MRR in 60 days</span>
+    <span class="ticker-item"><strong>SophiaStyle</strong> <span class="ticker-dot">●</span> Lifestyle Creator <span class="ticker-dot">●</span> $62K MRR in 120 days</span>
+    <span class="ticker-item"><strong>GhostAI</strong> <span class="ticker-dot">●</span> Gaming Streamer <span class="ticker-dot">●</span> $18K MRR in 45 days</span>
+    <span class="ticker-item"><strong>CoachKai</strong> <span class="ticker-dot">●</span> Business Coach <span class="ticker-dot">●</span> $45K MRR in 75 days</span>
+    <span class="ticker-item"><strong>FitWithMaya</strong> <span class="ticker-dot">●</span> Fitness Creator <span class="ticker-dot">●</span> $38K MRR in 90 days</span>
+    <span class="ticker-item"><strong>MoneyMind AI</strong> <span class="ticker-dot">●</span> Finance Educator <span class="ticker-dot">●</span> $21K MRR in 60 days</span>
+    <span class="ticker-item"><strong>SophiaStyle</strong> <span class="ticker-dot">●</span> Lifestyle Creator <span class="ticker-dot">●</span> $62K MRR in 120 days</span>
+    <span class="ticker-item"><strong>GhostAI</strong> <span class="ticker-dot">●</span> Gaming Streamer <span class="ticker-dot">●</span> $18K MRR in 45 days</span>
+    <span class="ticker-item"><strong>CoachKai</strong> <span class="ticker-dot">●</span> Business Coach <span class="ticker-dot">●</span> $45K MRR in 75 days</span>
+  </div>
+</div>
+
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-noise"></div>
-  <div class="hero-glow"></div>
-  <div class="avail-pill"><span class="avail-dot"></span> TAKING NEW CLIENTS — LIMITED SPOTS</div>
-  <p class="hero-eyebrow">THE PREMIUM AI MONETIZATION STUDIO</p>
-  <h1 class="hero-h1">
+  <div class="avail"><span class="avail-dot"></span> TAKING NEW CLIENTS — 3 SPOTS LEFT</div>
+  <p style="font-size:10px;letter-spacing:3px;color:var(--gray);margin-bottom:20px">THE PREMIUM AI MONETIZATION STUDIO</p>
+  <h1>
     Your Audience<br>
-    <span class="serif">Is Already</span><br>
+    <em>Is Already</em><br>
     <span class="dim">A Gold Mine.</span>
   </h1>
   <p class="hero-sub">
     <strong>You built the following. We build the machine that monetizes it.</strong><br>
-    Custom AI platforms that turn fans into paying subscribers — 24/7, on autopilot. No team needed.
+    Custom AI platforms that turn fans into paying subscribers — 24/7, on autopilot.
   </p>
   <div class="hero-ctas">
-    <a href="https://calendly.com/rdrohit/30min"><button class="cta-main">→ GET YOUR FREE BLUEPRINT</button></a>
-    <a href="#demo"><button class="cta-sec">SEE IT IN ACTION</button></a>
+    <a href="https://calendly.com/rdrohit/30min" target="_blank"><button class="cta-main">→ GET YOUR FREE BLUEPRINT</button></a>
+    <a href="#demo"><button class="cta-sec">SEE HOW IT WORKS</button></a>
   </div>
-  <div class="hero-social-proof">
-    <div style="text-align:center"><span class="proof-num" data-target="40">0</span>+ BUILDS LIVE</div>
-    <div class="proof-divider"></div>
-    <div style="text-align:center"><span class="proof-num" data-target="2">0</span>M+ REVENUE GENERATED</div>
-    <div class="proof-divider"></div>
-    <div style="text-align:center"><span class="proof-num" data-target="98">0</span>% CLIENT RETENTION</div>
-    <div class="proof-divider"></div>
-    <div style="text-align:center"><span class="proof-num" data-target="12">0</span> COUNTRIES SERVED</div>
-  </div>
-  <div class="scroll-indicator">
-    <span class="scroll-text">SCROLL TO EXPLORE</span>
-    <div class="scroll-line"></div>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num">40+</span><span class="stat-label">BUILDS LIVE</span></div>
+    <div class="stat-div"></div>
+    <div class="stat"><span class="stat-num">$2M+</span><span class="stat-label">REVENUE GENERATED</span></div>
+    <div class="stat-div"></div>
+    <div class="stat"><span class="stat-num">98%</span><span class="stat-label">CLIENT RETENTION</span></div>
+    <div class="stat-div"></div>
+    <div class="stat"><span class="stat-num">12</span><span class="stat-label">COUNTRIES SERVED</span></div>
   </div>
 </section>
 
-<!-- TICKER -->
-<div class="ticker-section">
-  <div class="ticker-track" id="ticker">
-    <span class="ticker-item"><strong>FitWithMaya</strong> <span class="dot">●</span> Fitness Creator <span class="dot">●</span> $38K MRR in 90 days</span>
-    <span class="ticker-item"><strong>MoneyMind AI</strong> <span class="dot">●</span> Finance Educator <span class="dot">●</span> $21K MRR in 60 days</span>
-    <span class="ticker-item"><strong>SophiaStyle</strong> <span class="dot">●</span> Lifestyle Creator <span class="dot">●</span> $62K MRR in 120 days</span>
-    <span class="ticker-item"><strong>GhostAI</strong> <span class="dot">●</span> Gaming Streamer <span class="dot">●</span> $18K MRR in 45 days</span>
-    <span class="ticker-item"><strong>CoachKai</strong> <span class="dot">●</span> Business Coach <span class="dot">●</span> $45K MRR in 75 days</span>
-    <span class="ticker-item"><strong>FitWithMaya</strong> <span class="dot">●</span> Fitness Creator <span class="dot">●</span> $38K MRR in 90 days</span>
-    <span class="ticker-item"><strong>MoneyMind AI</strong> <span class="dot">●</span> Finance Educator <span class="dot">●</span> $21K MRR in 60 days</span>
-    <span class="ticker-item"><strong>SophiaStyle</strong> <span class="dot">●</span> Lifestyle Creator <span class="dot">●</span> $62K MRR in 120 days</span>
-    <span class="ticker-item"><strong>GhostAI</strong> <span class="dot">●</span> Gaming Streamer <span class="dot">●</span> $18K MRR in 45 days</span>
-    <span class="ticker-item"><strong>CoachKai</strong> <span class="dot">●</span> Business Coach <span class="dot">●</span> $45K MRR in 75 days</span>
-  </div>
-</div>
+<div class="sep"></div>
 
 <!-- REVENUE STREAMS -->
-<section class="revenue-section" id="revenue">
-  <div style="max-width:1240px;margin:0 auto">
-    <div class="reveal">
-      <p class="s-label">THE OPPORTUNITY</p>
-      <h2 class="s-title">One AI Chatbot.<br><em>10+ Revenue Streams.</em></h2>
+<section class="section" id="revenue">
+  <p class="s-label">THE OPPORTUNITY</p>
+  <h2 class="s-title">One AI Chatbot.<br><em>10+ Revenue Streams.</em></h2>
+  <p class="s-sub">Most creators earn from 1–2 sources. A CreatorOS platform unlocks every possible revenue stream from your audience — simultaneously, automatically.</p>
+  <div class="g2">
+    <div class="streams">
+      <div class="stream"><div class="s-icon">💬</div><div class="s-info"><div class="s-name">Premium Chat Access</div><div class="s-desc">Monthly subscription to chat with your AI</div></div><div><div class="s-amt">$12K</div><span class="s-per">PER MONTH</span></div></div>
+      <div class="stream"><div class="s-icon">🎙️</div><div class="s-info"><div class="s-name">Voice Message Unlocks</div><div class="s-desc">Fans pay per voice note from your AI clone</div></div><div><div class="s-amt">$8K</div><span class="s-per">PER MONTH</span></div></div>
+      <div class="stream"><div class="s-icon">🎓</div><div class="s-info"><div class="s-name">Course Upsells via AI</div><div class="s-desc">AI recommends your courses in conversation</div></div><div><div class="s-amt">$9K</div><span class="s-per">PER MONTH</span></div></div>
+      <div class="stream"><div class="s-icon">🏷️</div><div class="s-info"><div class="s-name">Sponsored Integrations</div><div class="s-desc">Brands pay to be mentioned by your AI</div></div><div><div class="s-amt">$7K</div><span class="s-per">PER MONTH</span></div></div>
+      <div class="stream"><div class="s-icon">💎</div><div class="s-info"><div class="s-name">VIP Tier Subscription</div><div class="s-desc">High-ticket access with exclusive content</div></div><div><div class="s-amt">$14K</div><span class="s-per">PER MONTH</span></div></div>
+      <div class="stream"><div class="s-icon">📦</div><div class="s-info"><div class="s-name">Product &amp; Affiliate Sales</div><div class="s-desc">AI promotes your merch and affiliate links</div></div><div><div class="s-amt">$5K</div><span class="s-per">PER MONTH</span></div></div>
+      <div class="stream"><div class="s-icon">📊</div><div class="s-info"><div class="s-name">AI Coaching Plans</div><div class="s-desc">Personalized plans generated by your AI</div></div><div><div class="s-amt">$6K</div><span class="s-per">PER MONTH</span></div></div>
+      <div class="stream"><div class="s-icon">🔒</div><div class="s-info"><div class="s-name">Gated Community Access</div><div class="s-desc">AI guards your private Discord or group</div></div><div><div class="s-amt">$4K</div><span class="s-per">PER MONTH</span></div></div>
+      <div class="stream"><div class="s-icon">🎁</div><div class="s-info"><div class="s-name">Digital Product Sales</div><div class="s-desc">Presets, templates, guides sold via AI</div></div><div><div class="s-amt">$5K</div><span class="s-per">PER MONTH</span></div></div>
+      <div class="stream"><div class="s-icon">🌐</div><div class="s-info"><div class="s-name">White-label Licensing</div><div class="s-desc">Other creators license your AI system</div></div><div><div class="s-amt">$8K</div><span class="s-per">PER MONTH</span></div></div>
+      <div class="total-row"><span>TOTAL MONTHLY POTENTIAL</span><strong>$78,000 / mo</strong></div>
     </div>
-    <div class="revenue-grid">
-      <div class="reveal reveal-delay-1">
-        <div class="revenue-streams">
-          <div class="stream-row">
-            <div class="stream-icon">💬</div>
-            <div class="stream-info"><div class="stream-name">Premium Chat Access</div><div class="stream-desc">Monthly subscription to chat with your AI</div></div>
-            <div class="stream-rev"><div class="stream-amount">$12K</div><div class="stream-period">PER MONTH</div></div>
-          </div>
-          <div class="stream-row">
-            <div class="stream-icon">🎙️</div>
-            <div class="stream-info"><div class="stream-name">Voice Message Unlocks</div><div class="stream-desc">Fans pay per voice note from your AI clone</div></div>
-            <div class="stream-rev"><div class="stream-amount">$8K</div><div class="stream-period">PER MONTH</div></div>
-          </div>
-          <div class="stream-row">
-            <div class="stream-icon">🎓</div>
-            <div class="stream-info"><div class="stream-name">Course Upsells via AI</div><div class="stream-desc">AI recommends your courses in conversation</div></div>
-            <div class="stream-rev"><div class="stream-amount">$9K</div><div class="stream-period">PER MONTH</div></div>
-          </div>
-          <div class="stream-row">
-            <div class="stream-icon">🏷️</div>
-            <div class="stream-info"><div class="stream-name">Sponsored Integrations</div><div class="stream-desc">Brands pay to be mentioned by your AI</div></div>
-            <div class="stream-rev"><div class="stream-amount">$7K</div><div class="stream-period">PER MONTH</div></div>
-          </div>
-          <div class="stream-row">
-            <div class="stream-icon">💎</div>
-            <div class="stream-info"><div class="stream-name">VIP Tier Subscription</div><div class="stream-desc">High-ticket access with exclusive content</div></div>
-            <div class="stream-rev"><div class="stream-amount">$14K</div><div class="stream-period">PER MONTH</div></div>
-          </div>
-          <div class="stream-row">
-            <div class="stream-icon">📦</div>
-            <div class="stream-info"><div class="stream-name">Product Affiliate Sales</div><div class="stream-desc">AI promotes your merch and affiliate links</div></div>
-            <div class="stream-rev"><div class="stream-amount">$5K</div><div class="stream-period">PER MONTH</div></div>
-          </div>
-          <div class="stream-row">
-            <div class="stream-icon">📊</div>
-            <div class="stream-info"><div class="stream-name">AI Coaching Plans</div><div class="stream-desc">Personalized plans generated by your AI</div></div>
-            <div class="stream-rev"><div class="stream-amount">$6K</div><div class="stream-period">PER MONTH</div></div>
-          </div>
-          <div class="stream-row">
-            <div class="stream-icon">🔒</div>
-            <div class="stream-info"><div class="stream-name">Gated Community Access</div><div class="stream-desc">AI guards and curates your private Discord</div></div>
-            <div class="stream-rev"><div class="stream-amount">$4K</div><div class="stream-period">PER MONTH</div></div>
-          </div>
-          <div class="stream-row">
-            <div class="stream-icon">🎁</div>
-            <div class="stream-info"><div class="stream-name">Digital Product Sales</div><div class="stream-desc">Presets, templates, guides — sold via AI</div></div>
-            <div class="stream-rev"><div class="stream-amount">$5K</div><div class="stream-period">PER MONTH</div></div>
-          </div>
-          <div class="stream-row">
-            <div class="stream-icon">🌐</div>
-            <div class="stream-info"><div class="stream-name">White-label Licensing</div><div class="stream-desc">Other creators license your AI system</div></div>
-            <div class="stream-rev"><div class="stream-amount">$8K</div><div class="stream-period">PER MONTH</div></div>
-          </div>
-          <div class="total-bar">
-            <span class="total-label">TOTAL MONTHLY POTENTIAL</span>
-            <span class="total-amount">$78,000/mo</span>
-          </div>
-        </div>
+    <div>
+      <p class="s-label">WHY NOW</p>
+      <h3 style="font-size:clamp(28px,4vw,46px);font-weight:800;line-height:1.05;letter-spacing:-2px;margin-bottom:20px">The Window Is Open.<br><em style="font-style:italic;font-family:Georgia,serif;font-weight:400;color:var(--g)">For Now.</em></h3>
+      <p style="font-size:15px;color:var(--gray);line-height:1.9;margin-bottom:24px">Less than 0.1% of creators have a personal AI. The ones who build now own the category before it gets crowded. Three years from now every major creator will have one. Are you first, or catching up?</p>
+      <div style="padding:20px 24px;border-left:2px solid var(--g);background:var(--b2);font-size:13px;color:var(--gray);line-height:1.8;font-family:monospace;margin-bottom:28px">
+        "We hit $38K MRR in 90 days. My AI responds to 4,000 fans daily while I sleep. Best investment I've ever made as a creator."<br><br>
+        <strong style="color:var(--white)">— FitWithMaya, 2.1M Followers</strong>
       </div>
-      <div class="revenue-right reveal reveal-delay-2">
-        <p class="s-label">WHY NOW</p>
-        <h3 class="rev-headline">The Window<br><em>Is Wide Open.</em><br>For 12 More Months.</h3>
-        <p class="rev-body">Right now, less than 0.1% of creators have a personal AI. The ones who build now will own the category before it gets crowded. Three years from now, every major creator will have one. The question is — are you first, or are you catching up?</p>
-        <div class="rev-note">
-          "We hit $38K MRR in 90 days. My AI responds to 4,000 fans daily while I sleep. It's the best investment I've made as a creator."<br><br>
-          — FitWithMaya, 2.1M Followers
-        </div>
-        <a href="https://calendly.com/rdrohit/30min"><button class="cta-main" style="width:100%">→ CLAIM YOUR SPOT NOW</button></a>
-      </div>
+      <a href="https://calendly.com/rdrohit/30min" target="_blank"><button class="cta-main" style="width:100%">→ CLAIM YOUR SPOT NOW</button></a>
     </div>
   </div>
 </section>
 
-<!-- DEMO SECTION -->
-<section class="demo-section" id="demo">
-  <div style="max-width:1240px;margin:0 auto">
-    <div class="reveal">
-      <p class="s-label">SEE IT IN ACTION</p>
-      <h2 class="s-title">Your AI.<br><em>Your Personality.</em><br>Your Revenue.</h2>
-    </div>
-    <div class="demo-tabs">
-      <button class="demo-tab active" onclick="switchDemo(this,'chat')">💬 Chat Demo</button>
-      <button class="demo-tab" onclick="switchDemo(this,'voice')">🎙️ Voice AI</button>
-      <button class="demo-tab" onclick="switchDemo(this,'analytics')">📊 Dashboard</button>
-      <button class="demo-tab" onclick="switchDemo(this,'paywall')">💳 Paywall</button>
-    </div>
+<div class="sep"></div>
 
-    <!-- Chat Demo -->
-    <div class="demo-screens">
-      <div style="display:flex;align-items:center;justify-content:center;padding:48px;background:var(--black3)">
-        <div class="phone-frame">
-          <div class="phone-status"><span class="phone-time">9:41</span><span class="phone-icons">●●● 5G ■</span></div>
-          <div class="chat-header">
-            <div class="chat-avatar" id="demo-avatar">S</div>
-            <div>
-              <div class="chat-name" id="demo-chatname">SophiaStyle AI</div>
-              <div class="chat-status">Online · Responses in &lt;2s</div>
-            </div>
-          </div>
-          <div class="chat-body" id="chat-body">
-            <div class="msg them">Hey! I want to know what to wear to a rooftop dinner tonight 🙏</div>
-            <div class="msg-time">9:38 AM</div>
-            <div class="msg me">For a rooftop dinner you're going to want to nail that elevated-casual vibe ✨</div>
-            <div class="msg them">Give me something specific — I'm 5'4" and I want to look tall and chic</div>
-            <div class="typing" id="typing-ind"><span></span><span></span><span></span></div>
-          </div>
-          <div class="chat-input-bar">
-            <input class="chat-input" placeholder="Message SophiaStyle AI..." readonly>
-            <button class="chat-send">↑</button>
-          </div>
-        </div>
-      </div>
-      <div style="padding:48px;background:var(--black3);display:flex;flex-direction:column;justify-content:center;gap:16px" id="demo-right">
-        <p class="s-label">CHAT AI PLATFORM</p>
-        <h3 style="font-size:28px;font-weight:800;line-height:1.1;letter-spacing:-1px">Fans Pay to Talk<br>To <em style="font-style:italic;font-family:Georgia,serif;color:var(--g)">You.</em></h3>
-        <p style="font-size:13px;color:var(--gray);line-height:1.8;font-family:monospace">Your AI is trained on your exact voice, style, and knowledge. It responds as you — naturally, instantly, at scale. Fans can't tell the difference. They don't care. They just want access to you.</p>
-        <div class="demo-features">
-          <div class="demo-feat"><div class="df-icon">🧠</div><div><div class="df-title">Trained on Your Content</div><div class="df-desc">Years of posts, captions, interviews & DMs become the AI's brain.</div></div></div>
-          <div class="demo-feat"><div class="df-icon">⚡</div><div><div class="df-title">Sub-2 Second Responses</div><div class="df-desc">Feels live. Feels real. Fans stay engaged and keep spending.</div></div></div>
-          <div class="demo-feat"><div class="df-icon">💸</div><div><div class="df-title">Credit & Subscription Gates</div><div class="df-desc">Free tier hooks them. Paid tier keeps them. Automatic upgrades.</div></div></div>
-        </div>
-        <div class="demo-earn"><span class="earn-label">AVG MONTHLY REVENUE PER BUILD</span><span class="earn-num">$24K</span></div>
-      </div>
+<!-- HOW IT WORKS / DEMO -->
+<section class="bg2" id="demo">
+  <div class="section" style="padding-top:100px;padding-bottom:100px">
+    <p class="s-label">HOW IT WORKS</p>
+    <h2 class="s-title">Your AI. Your Personality.<br><em>Your Revenue.</em></h2>
+    <p class="s-sub">We train an AI on your content, voice, and brand — then connect it to a full payment system. Fans pay to talk to "you," 24/7.</p>
+    <div class="g3">
+      <div class="card"><div class="card-icon">🧠</div><div class="card-title">Trained on YOU</div><div class="card-body">We feed your posts, captions, interviews, and DMs into the AI. It learns your vocabulary, humor, style, and knowledge. Fans can't tell it apart from you.</div><span class="card-tag">PERSONA TRAINING</span></div>
+      <div class="card"><div class="card-icon">💳</div><div class="card-title">Subscription & Credits</div><div class="card-body">Free tier hooks them. Paid tier keeps them. Credit packs drive impulse buys. Stripe handles everything — payouts land directly in your account.</div><span class="card-tag">STRIPE INTEGRATED</span></div>
+      <div class="card"><div class="card-icon">🎙️</div><div class="card-title">Voice AI Clone</div><div class="card-body">30 seconds of your voice becomes unlimited audio responses. Fans pay premium to hear messages from "you." Highest-converting feature we build.</div><span class="card-tag">VOICE CLONING</span></div>
+      <div class="card"><div class="card-icon">📊</div><div class="card-title">Live Revenue Dashboard</div><div class="card-body">See MRR, churn, fan LTV, and revenue by stream in real time. Know exactly what's working and where money is being left on the table.</div><span class="card-tag">REAL-TIME ANALYTICS</span></div>
+      <div class="card"><div class="card-icon">🔗</div><div class="card-title">Multi-Platform</div><div class="card-body">Your AI lives on a custom web app, Telegram, Discord, or WhatsApp — wherever your fans are. One build, every platform.</div><span class="card-tag">OMNICHANNEL</span></div>
+      <div class="card"><div class="card-icon">🛡️</div><div class="card-title">Brand Safety</div><div class="card-body">Custom guardrails ensure your AI never says anything off-brand or legally risky. Your reputation is protected automatically, at scale.</div><span class="card-tag">AI SAFETY LAYER</span></div>
     </div>
   </div>
 </section>
+
+<div class="sep"></div>
 
 <!-- BEFORE / AFTER -->
-<section class="ba-section">
-  <div style="max-width:1240px;margin:0 auto">
-    <div class="reveal" style="text-align:center;margin-bottom:0">
-      <p class="s-label" style="text-align:center">THE REALITY CHECK</p>
-      <h2 class="s-title" style="text-align:center">Where You Are vs.<br><em>Where You Could Be</em></h2>
+<section class="section">
+  <p class="s-label">THE REALITY CHECK</p>
+  <h2 class="s-title">Where You Are vs.<br><em>Where You Could Be</em></h2>
+  <p class="s-sub" style="margin-bottom:36px">One decision separates these two realities.</p>
+  <div class="ba-grid">
+    <div class="ba before">
+      <span class="ba-badge">WITHOUT CREATOROS</span>
+      <ul class="ba-list">
+        <li>Posting content, hoping the algorithm pays you</li>
+        <li>$0 income when you're not actively creating</li>
+        <li>Manually answering the same DMs every single day</li>
+        <li>100% dependent on brand deals — one no = no income</li>
+        <li>Fans engage once, disappear, never convert to revenue</li>
+        <li>No data on who your highest-value fans are</li>
+        <li>8 hours asleep = 8 hours of $0 earned</li>
+        <li>Trading your time for money — forever</li>
+      </ul>
     </div>
-    <div class="ba-grid reveal" style="margin-top:60px">
-      <div class="ba-card before">
-        <span class="ba-label">WITHOUT CREATOROS</span>
-        <ul class="ba-items">
-          <li>Posting content, hoping the algorithm rewards you</li>
-          <li>$0 when you're not actively creating</li>
-          <li>Manually answering the same DMs every day</li>
-          <li>Brand deal dependent — one call ends your income</li>
-          <li>Fans engage once, disappear, never convert</li>
-          <li>No data on who your highest-value fans are</li>
-          <li>Sleeping 8 hrs = 8 hrs of $0 revenue</li>
-          <li>Trading time for money — forever</li>
-        </ul>
-      </div>
-      <div class="ba-card after">
-        <span class="ba-label">WITH CREATOROS</span>
-        <ul class="ba-items">
-          <li>Revenue system running 24/7, algorithm-proof</li>
-          <li>Passive income while you sleep, travel, or take a break</li>
-          <li>AI handles 4,000+ fan conversations daily, for you</li>
-          <li>10+ revenue streams — diversified and compounding</li>
-          <li>Fans become paying subscribers in the first conversation</li>
-          <li>Full analytics on fan spend, behavior, and churn risk</li>
-          <li>Your AI makes money every hour of every day</li>
-          <li>Build once. Earn forever. Scale without limits.</li>
-        </ul>
-      </div>
+    <div class="ba after">
+      <span class="ba-badge">WITH CREATOROS</span>
+      <ul class="ba-list">
+        <li>Revenue system running 24/7 — algorithm-proof</li>
+        <li>Passive income while you sleep, travel, or take a break</li>
+        <li>AI handles 4,000+ fan conversations daily, for you</li>
+        <li>10+ diversified revenue streams that compound monthly</li>
+        <li>Fans become paying subscribers in the first conversation</li>
+        <li>Full analytics on fan spend, behavior, and churn risk</li>
+        <li>Your AI makes money every hour of every day</li>
+        <li>Build once. Earn forever. Scale without limits.</li>
+      </ul>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section class="feat-section" id="features">
-  <div style="max-width:1240px;margin:0 auto">
-    <div class="reveal">
-      <p class="s-label">THE FULL STACK</p>
-      <h2 class="s-title">Everything Built.<br><em>Nothing Left to Figure Out.</em></h2>
-    </div>
-    <div class="feats">
-      <div class="feat-card reveal reveal-delay-1">
-        <div class="feat-ico">🤖</div>
-        <div class="feat-title">Custom AI Persona</div>
-        <div class="feat-desc">Trained on your content archive, DMs, voice, and brand. It doesn't sound like ChatGPT. It sounds like <em>you</em> — at your best, every time.</div>
-        <span class="feat-tag">PROPRIETARY TRAINING</span>
-      </div>
-      <div class="feat-card reveal reveal-delay-2">
-        <div class="feat-ico">🎙️</div>
-        <div class="feat-title">Voice AI Clone</div>
-        <div class="feat-desc">Real-time voice synthesis from 30 seconds of your audio. Fans get voice notes from "you." Premium feature — premium price tag.</div>
-        <span class="feat-tag">VOICE CLONING</span>
-      </div>
-      <div class="feat-card reveal reveal-delay-3">
-        <div class="feat-ico">💳</div>
-        <div class="feat-title">Subscription + Credit Engine</div>
-        <div class="feat-desc">Stripe-powered tiers, credit packs, one-time unlocks, trial periods. Automatic upsell flows built into every conversation.</div>
-        <span class="feat-tag">STRIPE INTEGRATED</span>
-      </div>
-      <div class="feat-card reveal reveal-delay-1">
-        <div class="feat-ico">📊</div>
-        <div class="feat-title">Revenue Dashboard</div>
-        <div class="feat-desc">Live MRR, churn, ARPU, fan LTV, conversion rates. Know your numbers in real time. No spreadsheets needed.</div>
-        <span class="feat-tag">REAL-TIME ANALYTICS</span>
-      </div>
-      <div class="feat-card reveal reveal-delay-2">
-        <div class="feat-ico">🔗</div>
-        <div class="feat-title">Multi-Platform Deploy</div>
-        <div class="feat-desc">Web app, Telegram, Discord, WhatsApp — your AI lives wherever your fans are. One build, everywhere.</div>
-        <span class="feat-tag">OMNICHANNEL</span>
-      </div>
-      <div class="feat-card reveal reveal-delay-3">
-        <div class="feat-ico">🧪</div>
-        <div class="feat-title">A/B Revenue Testing</div>
-        <div class="feat-desc">We test pricing, messaging, and conversation flows automatically. Every cycle pushes your MRR higher. Never settle for "good enough."</div>
-        <span class="feat-tag">AUTO-OPTIMIZATION</span>
-      </div>
-      <div class="feat-card reveal reveal-delay-1">
-        <div class="feat-ico">🛡️</div>
-        <div class="feat-title">Brand Safety Layer</div>
-        <div class="feat-desc">Enterprise-grade guardrails. Your AI never says anything off-brand, inappropriate, or legally risky. Your reputation stays intact.</div>
-        <span class="feat-tag">AI SAFETY</span>
-      </div>
-      <div class="feat-card reveal reveal-delay-2">
-        <div class="feat-ico">📈</div>
-        <div class="feat-title">Fan Segmentation</div>
-        <div class="feat-desc">Identify whales vs casual fans. Automatically serve high-value fans premium offers. Maximize every conversation's revenue ceiling.</div>
-        <span class="feat-tag">SMART TARGETING</span>
-      </div>
-      <div class="feat-card reveal reveal-delay-3">
-        <div class="feat-ico">🤝</div>
-        <div class="feat-title">Ongoing Partnership</div>
-        <div class="feat-desc">We don't hand off and disappear. Monthly strategy calls, optimization cycles, and a team that treats your MRR like our own.</div>
-        <span class="feat-tag">LONG-TERM GROWTH</span>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="sep"></div>
 
 <!-- CASE STUDIES -->
-<section style="background:var(--black2);padding:120px 52px" id="results">
-  <div style="max-width:1240px;margin:0 auto">
-    <div class="reveal">
-      <p class="s-label">LIVE RESULTS</p>
-      <h2 class="s-title">Real Creators.<br><em>Real Numbers.</em></h2>
-    </div>
-    <div class="cases reveal">
-      <div class="case-card">
+<section class="bg2" id="results">
+  <div class="section" style="padding-top:100px;padding-bottom:100px">
+    <p class="s-label">LIVE RESULTS</p>
+    <h2 class="s-title">Real Creators.<br><em>Real Numbers.</em></h2>
+    <p class="s-sub">Every build below was delivered in under 21 days and was profitable within the first month.</p>
+    <div class="cases">
+      <div class="case">
         <div class="case-niche">FITNESS CREATOR · 2.1M FOLLOWERS</div>
-        <div class="case-title">FitWithMaya — AI Coach</div>
-        <div class="case-desc">Full AI fitness coach platform with voice messages, custom workout plans, and a 3-tier subscription model. Built in 18 days, profitable in week one.</div>
-        <div class="case-stats">
-          <div class="cstat"><div class="cstat-num">$38K</div><div class="cstat-label">MRR AT 90 DAYS</div></div>
-          <div class="cstat"><div class="cstat-num">4.2K</div><div class="cstat-label">PAYING SUBS</div></div>
-          <div class="cstat"><div class="cstat-num">91%</div><div class="cstat-label">M1 RETENTION</div></div>
+        <div class="case-title">FitWithMaya — AI Coach Platform</div>
+        <div class="case-desc">Full AI fitness coach with voice messages, custom workout generation, and 3-tier subscriptions. Built in 18 days, profitable in week one.</div>
+        <div class="case-nums">
+          <div><div class="cn-val">$38K</div><div class="cn-label">MRR AT 90 DAYS</div></div>
+          <div><div class="cn-val">4.2K</div><div class="cn-label">PAYING SUBS</div></div>
+          <div><div class="cn-val">91%</div><div class="cn-label">M1 RETENTION</div></div>
         </div>
-        <div class="case-arrow">↗</div>
       </div>
-      <div class="case-card">
+      <div class="case">
         <div class="case-niche">LIFESTYLE · 5M INSTAGRAM</div>
-        <div class="case-title">SophiaStyle — AI Stylist</div>
-        <div class="case-desc">Fashion and lifestyle AI with image analysis, outfit recs, and sponsored brand integrations. Voice note unlocks alone drive $11K/mo.</div>
-        <div class="case-stats">
-          <div class="cstat"><div class="cstat-num">$62K</div><div class="cstat-label">MRR AT 120 DAYS</div></div>
-          <div class="cstat"><div class="cstat-num">11K+</div><div class="cstat-label">ACTIVE USERS</div></div>
-          <div class="cstat"><div class="cstat-num">$5.60</div><div class="cstat-label">AVG REV/USER</div></div>
+        <div class="case-title">SophiaStyle — AI Personal Stylist</div>
+        <div class="case-desc">Fashion AI with image analysis, outfit recs, and brand integrations. Voice note unlocks alone generate $11K/month.</div>
+        <div class="case-nums">
+          <div><div class="cn-val">$62K</div><div class="cn-label">MRR AT 120 DAYS</div></div>
+          <div><div class="cn-val">11K+</div><div class="cn-label">ACTIVE USERS</div></div>
+          <div><div class="cn-val">$5.60</div><div class="cn-label">AVG REV/USER</div></div>
         </div>
-        <div class="case-arrow">↗</div>
       </div>
-      <div class="case-card">
+      <div class="case">
         <div class="case-niche">FINANCE EDUCATOR · 800K YOUTUBE</div>
-        <div class="case-title">MoneyMind — Finance Tutor</div>
-        <div class="case-desc">Conversational finance AI in the creator's exact style. Integrated course upsell funnel tripled course sales within 60 days of launch.</div>
-        <div class="case-stats">
-          <div class="cstat"><div class="cstat-num">$21K</div><div class="cstat-label">MRR AT 60 DAYS</div></div>
-          <div class="cstat"><div class="cstat-num">3.2x</div><div class="cstat-label">COURSE SALES LIFT</div></div>
-          <div class="cstat"><div class="cstat-num">1.9K</div><div class="cstat-label">SUBSCRIBERS</div></div>
+        <div class="case-title">MoneyMind — Finance Tutor AI</div>
+        <div class="case-desc">Conversational finance AI that speaks in the creator's exact style. Integrated course upsell funnel tripled course sales within 60 days.</div>
+        <div class="case-nums">
+          <div><div class="cn-val">$21K</div><div class="cn-label">MRR AT 60 DAYS</div></div>
+          <div><div class="cn-val">3.2x</div><div class="cn-label">COURSE SALES LIFT</div></div>
+          <div><div class="cn-val">1.9K</div><div class="cn-label">SUBSCRIBERS</div></div>
         </div>
-        <div class="case-arrow">↗</div>
       </div>
-      <div class="case-card">
+      <div class="case">
         <div class="case-niche">BUSINESS COACH · 450K LINKEDIN</div>
         <div class="case-title">CoachKai — Strategy AI</div>
-        <div class="case-desc">High-ticket AI coaching platform with $297/mo VIP tier. AI conducts discovery calls, delivers personalized frameworks, and closes coaching upgrades automatically.</div>
-        <div class="case-stats">
-          <div class="cstat"><div class="cstat-num">$45K</div><div class="cstat-label">MRR AT 75 DAYS</div></div>
-          <div class="cstat"><div class="cstat-num">$297</div><div class="cstat-label">TOP TIER PRICE</div></div>
-          <div class="cstat"><div class="cstat-num">88%</div><div class="cstat-label">RENEWAL RATE</div></div>
+        <div class="case-desc">High-ticket AI coaching with $297/mo VIP tier. AI conducts discovery conversations, delivers personalized frameworks, closes upgrades automatically.</div>
+        <div class="case-nums">
+          <div><div class="cn-val">$45K</div><div class="cn-label">MRR AT 75 DAYS</div></div>
+          <div><div class="cn-val">$297</div><div class="cn-label">TOP TIER PRICE</div></div>
+          <div><div class="cn-val">88%</div><div class="cn-label">RENEWAL RATE</div></div>
         </div>
-        <div class="case-arrow">↗</div>
       </div>
     </div>
   </div>
 </section>
+
+<div class="sep"></div>
 
 <!-- PRICING -->
-<section class="pricing-section" id="pricing">
-  <div style="max-width:1240px;margin:0 auto">
-    <div class="reveal" style="text-align:center">
-      <p class="s-label" style="text-align:center">INVESTMENT</p>
-      <h2 class="s-title" style="text-align:center">Built to Pay for Itself<br><em>In 30 Days or Less.</em></h2>
-      <p style="font-size:14px;color:var(--gray);margin-top:20px;font-family:monospace">Our average client recoups the full build cost within the first month of launch.</p>
+<section class="section" id="pricing">
+  <p class="s-label">INVESTMENT</p>
+  <h2 class="s-title">Built to Pay for Itself<br><em>In 30 Days or Less.</em></h2>
+  <p class="s-sub">Our average client recoups the full build cost within the first month of launch.</p>
+  <div class="pricing">
+    <div class="p-card">
+      <div class="p-tier">STARTER</div>
+      <div class="p-name">Launch System</div>
+      <div class="p-price"><sub>$</sub>4,500</div>
+      <div class="p-cycle">One-time build fee</div>
+      <div class="p-roi">→ Avg. ROI in 22 days</div>
+      <ul class="p-feats">
+        <li>Custom AI persona (text)</li>
+        <li>Stripe subscription setup</li>
+        <li>Analytics dashboard</li>
+        <li>1 platform (web or Telegram)</li>
+        <li>14-day build timeline</li>
+        <li>30-day post-launch support</li>
+      </ul>
+      <a href="https://calendly.com/rdrohit/30min" target="_blank"><button class="p-btn outline">BOOK A CALL →</button></a>
     </div>
-    <div class="price-cards reveal">
-      <div class="p-card">
-        <div class="p-tier">STARTER</div>
-        <div class="p-name">Launch System</div>
-        <div class="p-price"><sub>$</sub>4,500</div>
-        <div class="p-cycle">One-time build fee</div>
-        <div class="p-roi">→ Avg. ROI in 22 days</div>
-        <ul class="p-feats">
-          <li>Custom AI persona (text)</li>
-          <li>Stripe subscription setup</li>
-          <li>Analytics dashboard</li>
-          <li>1 platform (web or Telegram)</li>
-          <li>14-day build timeline</li>
-          <li>30-day post-launch support</li>
-        </ul>
-        <a href="https://calendly.com/rdrohit/30min"><button class="p-btn outline">BOOK A CALL →</button></a>
-      </div>
-      <div class="p-card hot">
-        <div class="p-tier">MOST POPULAR</div>
-        <div class="p-name">Revenue Engine</div>
-        <div class="p-price"><sub>$</sub>12,000</div>
-        <div class="p-cycle">One-time build fee</div>
-        <div class="p-roi">→ Avg. ROI in 18 days</div>
-        <ul class="p-feats">
-          <li class="hot-feat">AI persona + Voice AI clone</li>
-          <li class="hot-feat">Subscription + credits engine</li>
-          <li class="hot-feat">Full analytics + revenue reports</li>
-          <li class="hot-feat">2 platforms of your choice</li>
-          <li class="hot-feat">21-day build timeline</li>
-          <li class="hot-feat">90-day post-launch support</li>
-          <li>1 A/B test optimization cycle</li>
-          <li>Fan segmentation + targeting</li>
-        </ul>
-        <a href="https://calendly.com/rdrohit/30min"><button class="p-btn fill">BOOK A CALL →</button></a>
-      </div>
-      <div class="p-card">
-        <div class="p-tier">ENTERPRISE</div>
-        <div class="p-name">Creator Empire</div>
-        <div class="p-price" style="font-size:38px">Custom</div>
-        <div class="p-cycle">Scoped per project</div>
-        <div class="p-roi">→ Avg. ROI in 14 days</div>
-        <ul class="p-feats">
-          <li>Everything in Revenue Engine</li>
-          <li>Custom model fine-tuning</li>
-          <li>Brand deal integration layer</li>
-          <li>Unlimited platforms</li>
-          <li>Dedicated account manager</li>
-          <li>Ongoing retainer available</li>
-          <li>99.9% uptime SLA</li>
-        </ul>
-        <a href="https://calendly.com/rdrohit/30min"><button class="p-btn outline">LET'S TALK →</button></a>
-      </div>
+    <div class="p-card hot">
+      <div class="p-tier">MOST POPULAR</div>
+      <div class="p-name">Revenue Engine</div>
+      <div class="p-price"><sub>$</sub>12,000</div>
+      <div class="p-cycle">One-time build fee</div>
+      <div class="p-roi">→ Avg. ROI in 18 days</div>
+      <ul class="p-feats">
+        <li class="hi">AI persona + Voice AI clone</li>
+        <li class="hi">Subscription + credits engine</li>
+        <li class="hi">Full analytics + revenue reports</li>
+        <li class="hi">2 platforms of your choice</li>
+        <li class="hi">21-day build timeline</li>
+        <li class="hi">90-day post-launch support</li>
+        <li>1 A/B test optimization cycle</li>
+        <li>Fan segmentation + targeting</li>
+      </ul>
+      <a href="https://calendly.com/rdrohit/30min" target="_blank"><button class="p-btn fill">BOOK A CALL →</button></a>
+    </div>
+    <div class="p-card">
+      <div class="p-tier">ENTERPRISE</div>
+      <div class="p-name">Creator Empire</div>
+      <div class="p-price" style="font-size:36px;letter-spacing:-1px">Custom</div>
+      <div class="p-cycle">Scoped per project</div>
+      <div class="p-roi">→ Avg. ROI in 14 days</div>
+      <ul class="p-feats">
+        <li>Everything in Revenue Engine</li>
+        <li>Custom model fine-tuning</li>
+        <li>Brand deal integration layer</li>
+        <li>Unlimited platforms</li>
+        <li>Dedicated account manager</li>
+        <li>Ongoing retainer available</li>
+        <li>99.9% uptime SLA</li>
+      </ul>
+      <a href="https://calendly.com/rdrohit/30min" target="_blank"><button class="p-btn outline">LET'S TALK →</button></a>
     </div>
   </div>
 </section>
+
+<div class="sep"></div>
 
 <!-- PROCESS -->
-<section class="proc-section" id="process">
-  <div style="max-width:1240px;margin:0 auto">
-    <div class="reveal">
-      <p class="s-label">HOW WE BUILD</p>
-      <h2 class="s-title">Blueprint to Revenue<br><em>In 21 Days.</em></h2>
-    </div>
-    <div class="proc-steps reveal">
-      <div class="proc-step">
-        <span class="step-ct">01 ——</span>
-        <div><div class="step-title">Free Strategy Call</div><div class="step-desc">We map your audience, revenue goals, and platform blueprint. You leave with a custom AI architecture plan, feature list, and revenue projections — for free. No commitment required.</div></div>
-        <span class="step-dur">DAY 1</span>
-      </div>
-      <div class="proc-step">
-        <span class="step-ct">02 ——</span>
-        <div><div class="step-title">Content & Brand Intake</div><div class="step-desc">We collect your archive — posts, captions, voice samples, DMs, brand docs. This becomes the raw training material for your AI's personality and knowledge base.</div></div>
-        <span class="step-dur">DAYS 2–4</span>
-      </div>
-      <div class="proc-step">
-        <span class="step-ct">03 ——</span>
-        <div><div class="step-title">Build & Train</div><div class="step-desc">We train your AI persona, build the payment infrastructure, integrate voice AI, design the analytics dashboard, and build the user-facing platform. Weekly check-ins. Staging preview included.</div></div>
-        <span class="step-dur">DAYS 5–18</span>
-      </div>
-      <div class="proc-step">
-        <span class="step-ct">04 ——</span>
-        <div><div class="step-title">Launch</div><div class="step-desc">QA, security audit, load testing, and launch. We give you a go-live playbook with audience announcement scripts and a first-week conversion strategy engineered for maximum day-1 revenue.</div></div>
-        <span class="step-dur">DAYS 19–21</span>
-      </div>
-      <div class="proc-step">
-        <span class="step-ct">05 ——</span>
-        <div><div class="step-title">Optimize & Scale</div><div class="step-desc">Post-launch we run A/B tests on pricing and messaging, monitor churn signals, and ship improvements based on real data. One goal: keep pushing your MRR up every single month.</div></div>
-        <span class="step-dur">ONGOING</span>
-      </div>
+<section class="bg2" id="process">
+  <div class="section" style="padding-top:100px;padding-bottom:100px">
+    <p class="s-label">THE BUILD PROCESS</p>
+    <h2 class="s-title">Blueprint to Revenue<br><em>In 21 Days.</em></h2>
+    <p class="s-sub">From strategy call to live platform — here's exactly how it works.</p>
+    <div class="steps">
+      <div class="step"><span class="step-n">01 ——</span><div><div class="step-title">Free Strategy Call</div><div class="step-body">We map your audience, goals, and build a custom AI blueprint together. Revenue projections, feature list, platform plan. Free, no commitment.</div></div><span class="step-time">DAY 1</span></div>
+      <div class="step"><span class="step-n">02 ——</span><div><div class="step-title">Content & Brand Intake</div><div class="step-body">We collect your archive — posts, voice samples, brand guidelines. This becomes the training material for your AI persona.</div></div><span class="step-time">DAYS 2–4</span></div>
+      <div class="step"><span class="step-n">03 ——</span><div><div class="step-title">Build & Train</div><div class="step-body">AI persona training, payment infrastructure, voice AI, analytics dashboard, and the full front-end. Weekly check-ins + staging preview included.</div></div><span class="step-time">DAYS 5–18</span></div>
+      <div class="step"><span class="step-n">04 ——</span><div><div class="step-title">Launch</div><div class="step-body">QA, security audit, load testing, then go live. You get a launch playbook with audience announcement scripts for maximum day-1 revenue.</div></div><span class="step-time">DAYS 19–21</span></div>
+      <div class="step"><span class="step-n">05 ——</span><div><div class="step-title">Optimize & Scale</div><div class="step-body">Post-launch we run A/B tests, monitor churn signals, and ship improvements. One goal: keep pushing your MRR up every single month.</div></div><span class="step-time">ONGOING</span></div>
     </div>
   </div>
 </section>
+
+<div class="sep"></div>
 
 <!-- FAQ -->
-<section class="faq-section">
-  <div style="max-width:1240px;margin:0 auto">
-    <div class="reveal" style="text-align:center">
-      <p class="s-label" style="text-align:center">FAQ</p>
-      <h2 class="s-title" style="text-align:center">Everything You're<br><em>Wondering About</em></h2>
+<section class="section">
+  <p class="s-label">FAQ</p>
+  <h2 class="s-title">Everything You're<br><em>Wondering About</em></h2>
+  <p class="s-sub" style="margin-bottom:36px">Honest answers, no fluff.</p>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Do I need to know anything about tech or AI? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><p>Zero. You show up to the strategy call and we handle everything — AI training, platform build, payment setup, launch. You just approve things and post the announcement. We're your technical co-founder for this.</p></div>
     </div>
-    <div class="faq-list reveal">
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">Do I need to know anything about tech or AI? <span class="icon">+</span></div>
-        <div class="faq-a"><p>Zero. You show up to the strategy call and we handle everything — AI training, platform build, payment setup, launch. You just approve things and post the announcement. We're your technical co-founder for this.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">Will my fans know it's an AI and not actually me? <span class="icon">+</span></div>
-        <div class="faq-a"><p>You choose whether to be transparent or not — that's completely your call. Most creators we work with are open about it ("Meet my AI twin!") and fans love it. The AI is trained to sound so authentically like you that the engagement rates are actually higher than most creators' real DMs.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">How long until I start making money? <span class="icon">+</span></div>
-        <div class="faq-a"><p>Most clients hit their first $1K within 72 hours of launch. Our average client recoups their full build investment within 18–22 days. The $62K/mo SophiaStyle result? That was 120 days in. The growth compounds fast once the system is live and optimized.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">What if I already have a course, merch, or brand deals? <span class="icon">+</span></div>
-        <div class="faq-a"><p>Even better. Your AI becomes the most powerful sales tool you've ever had. It naturally weaves in your courses, merch, and partner products during conversations — at exactly the right moment. Clients with existing products typically see 2–4x revenue lift from those existing lines alone.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">What size following do I need? <span class="icon">+</span></div>
-        <div class="faq-a"><p>We've seen 80K-follower creators outperform 2M-follower creators because it's about engagement quality, not raw numbers. As a general guide, 50K+ engaged followers on any platform is a strong foundation. Book a call and we'll tell you honestly if now is the right time or if you should wait.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">What happens after launch — am I on my own? <span class="icon">+</span></div>
-        <div class="faq-a"><p>Not at all. Every package includes 30–90 days of post-launch support, optimization cycles, and access to our team for questions. Our Revenue Engine and Enterprise clients get monthly strategy calls. We win when you win — that's the only model that makes sense to us.</p></div>
-      </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Will my fans know it's an AI? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><p>Your call entirely. Most creators are open about it ("Meet my AI twin!") and fans love it. The AI is trained to sound so authentically like you that engagement rates are actually higher than most creators' real DMs.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How long until I start making money? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><p>Most clients hit their first $1K within 72 hours of launch. Our average client recoups the full build investment within 18–22 days. The growth compounds fast once the system is live and optimized.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What following size do I need? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><p>50K+ engaged followers on any platform is a strong starting point. It's about engagement quality, not raw numbers — we've seen 80K-follower creators outperform 2M-follower creators. Book a call and we'll tell you honestly if now is the right time.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What happens after launch — am I on my own? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><p>Not at all. Every package includes 30–90 days of post-launch support, optimization cycles, and access to our team. Revenue Engine and Enterprise clients get monthly strategy calls. We win when you win.</p></div>
     </div>
   </div>
 </section>
 
+<div class="sep"></div>
+
 <!-- FINAL CTA -->
-<section class="final-cta">
-  <div class="reveal">
-    <p class="s-label" style="text-align:center">THE NEXT STEP</p>
-    <h2 class="final-h">
-      Book Your Free<br>
-      <em>Strategy Call.</em><br>
-      Today.
-    </h2>
-    <p class="final-sub">30 minutes. No pitch. No pressure. Just a clear blueprint for what your AI platform looks like, what it costs, and what it can earn — specific to your audience.</p>
-    <div class="final-ctas">
-      <a href="https://calendly.com/rdrohit/30min"><button class="cta-main">→ BOOK FREE STRATEGY CALL</button></a>
-      <a href="https://wa.me/917439130542"><button class="cta-sec">💬 WHATSAPP US FIRST</button></a>
-    </div>
-    <div class="final-trust">
-      <span class="trust-item"><span class="trust-dot">●</span> Free 30-min call</span>
-      <span class="trust-item"><span class="trust-dot">●</span> No obligation</span>
-      <span class="trust-item"><span class="trust-dot">●</span> Custom blueprint included</span>
-      <span class="trust-item"><span class="trust-dot">●</span> Spots limited — 3 open this month</span>
-    </div>
+<section class="final">
+  <p class="s-label" style="text-align:center">THE NEXT STEP</p>
+  <h2>
+    Book Your Free<br>
+    <em>Strategy Call.</em>
+  </h2>
+  <p class="final-sub">30 minutes. No pitch. No pressure. Just a clear blueprint for what your AI platform looks like, what it costs, and what it can earn — specific to your audience.</p>
+  <div class="final-ctas">
+    <a href="https://calendly.com/rdrohit/30min" target="_blank"><button class="cta-main">→ BOOK FREE STRATEGY CALL</button></a>
+    <a href="https://wa.me/917439130542" target="_blank"><button class="cta-sec">💬 WHATSAPP US FIRST</button></a>
+  </div>
+  <div class="trust">
+    <span>Free 30-min call</span>
+    <span>No obligation</span>
+    <span>Custom blueprint included</span>
+    <span>3 spots open this month</span>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div><div class="foot-brand">CREATOR<span>OS</span></div><p style="font-size:11px;color:var(--gray);margin-top:8px;font-family:monospace">The premium AI revenue studio<br>for creators who are serious.</p></div>
-  <div class="foot-copy">© 2025 CreatorOS · Based in India<br>Serving creators worldwide · All rights reserved</div>
+  <div class="foot-logo">CREATOR<span>OS</span></div>
+  <div class="foot-copy">© 2025 CreatorOS · Based in India · Serving creators worldwide</div>
   <div class="foot-links">
     <a href="#revenue">Revenue</a>
-    <a href="#demo">Demo</a>
+    <a href="#results">Results</a>
     <a href="#pricing">Pricing</a>
-    <a href="https://calendly.com/rdrohit/30min">Book a Call</a>
-    <a href="https://wa.me/917439130542">WhatsApp</a>
+    <a href="https://calendly.com/rdrohit/30min" target="_blank">Book a Call</a>
+    <a href="https://wa.me/917439130542" target="_blank">WhatsApp</a>
   </div>
 </footer>
 
 <script>
-// START COUNTERS IMMEDIATELY
-startCounters();
-
-// CURSOR
-(function(){
-  const c=document.getElementById('cursor'),r=document.getElementById('cursor-ring');
-  let mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove',e=>{
-    mx=e.clientX;my=e.clientY;
-    c.style.transform=`translate(${mx-5}px,${my-5}px)`;
-  });
-  function animRing(){
-    rx+=(mx-rx-18)*.12;
-    ry+=(my-ry-18)*.12;
-    r.style.transform=`translate(${rx}px,${ry}px)`;
-    requestAnimationFrame(animRing);
-  }
-  animRing();
-  document.querySelectorAll('button,a,.feat-card,.case-card,.stream-row,.proc-step,.faq-q').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{c.style.transform+=' scale(2.5)';r.style.transform+=' scale(1.5)';c.style.opacity='.6'});
-    el.addEventListener('mouseleave',()=>{c.style.opacity='1'});
-  });
-})();
-
-// NAV SCROLL
-window.addEventListener('scroll',()=>{
-  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
-});
-
-// SMOOTH LINKS
+// Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
   a.addEventListener('click',e=>{
     e.preventDefault();
@@ -866,93 +561,18 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   });
 });
 
-// COUNTER ANIMATION
-function startCounters(){
-  document.querySelectorAll('.proof-num').forEach(el=>{
-    const target=+el.dataset.target;
-    let cur=0;
-    const step=target/40;
-    const iv=setInterval(()=>{
-      cur+=step;
-      if(cur>=target){cur=target;clearInterval(iv);}
-      el.textContent=Math.floor(cur);
-    },30);
-  });
-}
-
-// SCROLL REVEAL
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
-},{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-
-// CHAT ANIMATION
-const msgs=[
-  {side:'them',text:'Recommend me something specific!'},
-  {side:'me',text:"Try a sleek midi dress — black or chocolate brown. Heeled mules add 3" and keep it effortless. A gold hoops + mini bag combo ties it together. You'll look 5'8" easy. 💫"},
-  {side:'them',text:'That sounds perfect. Any brands?'},
-  {side:'me',text:'For the dress: Revolve or ASOS Curve. Mules: Steve Madden JILLIAN. Bag: Mango mini leather clutch. All under $200 total 🛍️'},
-];
-let msgIdx=0;
-function addMsg(){
-  if(msgIdx>=msgs.length){msgIdx=0;return}
-  const body=document.getElementById('chat-body');
-  const ti=document.getElementById('typing-ind');
-  if(ti)ti.remove();
-  const m=document.createElement('div');
-  m.className='msg '+msgs[msgIdx].side;
-  m.textContent=msgs[msgIdx].text;
-  body.appendChild(m);
-  msgIdx++;
-  if(msgIdx<msgs.length){
-    const t2=document.createElement('div');
-    t2.className='typing';t2.id='typing-ind';
-    t2.innerHTML='<span></span><span></span><span></span>';
-    setTimeout(()=>{body.appendChild(t2);body.scrollTop=body.scrollHeight;},800);
-    setTimeout(addMsg,2200);
-  }
-  body.scrollTop=body.scrollHeight;
-}
-setTimeout(addMsg,2000);
-
-// DEMO TABS
-function switchDemo(btn,tab){
-  document.querySelectorAll('.demo-tab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const avatar=document.getElementById('demo-avatar');
-  const name=document.getElementById('demo-chatname');
-  const right=document.getElementById('demo-right');
-  const demos={
-    chat:{av:'S',nm:'SophiaStyle AI',label:'CHAT AI PLATFORM',h:'Fans Pay to Talk<br>To <em style="font-style:italic;font-family:Georgia,serif;color:var(--g)">You.</em>',body:'Your AI trained on your exact voice, style, and knowledge. Fans can\'t tell the difference. They just want access to you.',earn:'$24K',feats:[['🧠','Trained on Your Content','Years of posts, captions & DMs become the AI\'s brain.'],['⚡','Sub-2 Second Responses','Feels live. Fans stay engaged and keep spending.'],['💸','Credit & Subscription Gates','Free tier hooks them. Paid tier keeps them.']]},
-    voice:{av:'V',nm:'Voice AI Channel',label:'VOICE AI PLATFORM',h:'Your Voice.<br><em style="font-style:italic;font-family:Georgia,serif;color:var(--g)">Infinite Scale.</em>',body:'30 seconds of your voice = unlimited audio messages from "you." Fans pay premium for voice access. It\'s the most emotional, high-converting feature we build.',earn:'$11K',feats:[['🎙️','Voice Clone in 30 Sec','Indistinguishable from your real voice.'],['💰','Premium Unlock Pricing','Voice notes = highest ARPU feature.'],['🔄','Auto-Generated Replies','Your AI records personalized voice notes.']]},
-    analytics:{av:'📊',nm:'Revenue Dashboard',label:'ANALYTICS SUITE',h:'Know Every Dollar.<br><em style="font-style:italic;font-family:Georgia,serif;color:var(--g)">In Real Time.</em>',body:'Live MRR, fan LTV, churn risk, conversion rates, revenue by stream. You see exactly what\'s working and where money is being left on the table.',earn:'2.4x MRR',feats:[['📈','Live Revenue Tracking','MRR, ARPU, LTV — updated every minute.'],['🎯','Fan Segmentation','Know your top 1% spenders automatically.'],['🧪','A/B Test Results','Every experiment\'s impact on revenue.']]},
-    paywall:{av:'💳',nm:'Paywall System',label:'MONETIZATION ENGINE',h:'Monetize Every<br><em style="font-style:italic;font-family:Georgia,serif;color:var(--g)">Interaction.</em>',body:'Tiered subscriptions, one-time credit packs, gated content unlocks, trial periods. Every conversation is an opportunity to convert — and the system does it automatically.',earn:'$9K/mo',feats:[['💎','3-Tier Subscription Model','Free → Pro → VIP with natural upgrades.'],['🔒','Content Unlock Gates','Premium features drive impulse purchases.'],['📦','Credit Pack Sales','Fans buy more credits before they run out.']]},
-  };
-  const d=demos[tab];
-  if(avatar){avatar.textContent=typeof d.av==='string'&&d.av.length===1?d.av:'💊';avatar.textContent=d.av}
-  if(name)name.textContent=d.nm;
-  if(right)right.innerHTML=`
-    <p class="s-label">${d.label}</p>
-    <h3 style="font-size:28px;font-weight:800;line-height:1.1;letter-spacing:-1px">${d.h}</h3>
-    <p style="font-size:13px;color:var(--gray);line-height:1.8;font-family:monospace">${d.body}</p>
-    <div class="demo-features">
-      ${d.feats.map(f=>`<div class="demo-feat"><div class="df-icon">${f[0]}</div><div><div class="df-title">${f[1]}</div><div class="df-desc">${f[2]}</div></div></div>`).join('')}
-    </div>
-    <div class="demo-earn"><span class="earn-label">AVG MONTHLY REVENUE</span><span class="earn-num">${d.earn}</span></div>
-  `;
-}
-
-// FAQ
+// FAQ toggle
 function toggleFaq(el){
   const item=el.parentElement;
-  const wasOpen=item.classList.contains('open');
+  const isOpen=item.classList.contains('open');
   document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
-  if(!wasOpen)item.classList.add('open');
+  if(!isOpen)item.classList.add('open');
 }
 
-// TICKER DUPLICATE for seamless loop
-const track=document.getElementById('ticker');
-if(track)track.innerHTML+=track.innerHTML;
+// Nav scroll style
+window.addEventListener('scroll',()=>{
+  document.querySelector('nav').style.boxShadow=window.scrollY>40?'0 4px 30px rgba(0,0,0,0.4)':'none';
+});
 </script>
 </body>
 </html>
