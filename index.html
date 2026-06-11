@@ -19,14 +19,7 @@ body{background:var(--black);color:var(--white);font-family:'Helvetica Neue',Ari
 #cursor{position:fixed;width:10px;height:10px;background:var(--g);border-radius:50%;pointer-events:none;z-index:9999;transition:transform .15s,opacity .2s;mix-blend-mode:difference}
 #cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(0,255,135,0.4);border-radius:50%;pointer-events:none;z-index:9998;transition:all .1s ease;transform:translate(-13px,-13px)}
 
-/* LOADING SCREEN */
-#loader{position:fixed;inset:0;background:#080808;z-index:10000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;transition:opacity .6s,visibility .6s}
-#loader.done{opacity:0;visibility:hidden}
-.loader-logo{font-size:48px;font-weight:800;letter-spacing:-2px;color:var(--white)}
-.loader-logo span{color:var(--g)}
-.loader-bar-wrap{width:200px;height:2px;background:#1a1a1a}
-.loader-bar{height:100%;background:var(--g);width:0%;transition:width .05s linear}
-.loader-pct{font-size:11px;letter-spacing:3px;color:var(--gray);font-family:monospace}
+
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:20px 52px;display:flex;align-items:center;justify-content:space-between;transition:all .4s}
@@ -296,12 +289,7 @@ footer{background:var(--black2);border-top:1px solid #1a1a1a;padding:52px;displa
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 
-<!-- LOADER -->
-<div id="loader">
-  <div class="loader-logo">CREATOR<span>OS</span></div>
-  <div class="loader-bar-wrap"><div class="loader-bar" id="lbar"></div></div>
-  <div class="loader-pct" id="lpct">0%</div>
-</div>
+
 
 <!-- NAV -->
 <nav id="nav">
@@ -840,17 +828,8 @@ footer{background:var(--black2);border-top:1px solid #1a1a1a;padding:52px;displa
 </footer>
 
 <script>
-// LOADER
-(function(){
-  const bar=document.getElementById('lbar'),pct=document.getElementById('lpct'),loader=document.getElementById('loader');
-  let p=0;
-  const iv=setInterval(()=>{
-    p+=Math.random()*18+4;
-    if(p>=100){p=100;clearInterval(iv);setTimeout(()=>{loader.classList.add('done');startCounters();},300)}
-    bar.style.width=p+'%';
-    pct.textContent=Math.floor(p)+'%';
-  },60);
-})();
+// START COUNTERS IMMEDIATELY
+startCounters();
 
 // CURSOR
 (function(){
